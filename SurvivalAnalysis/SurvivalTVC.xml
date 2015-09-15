@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?><_ROOT_ EMVERSION="13.2" ORIENTATION="HORIZONTAL">
+<!--
+Copyright SAS Institute
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ 
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<Workspace>
+<NODES>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE" X="732" Y="65" DESCRIPTION="SAS Code" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+proc sort data=&amp;EM_IMPORT_SCORE. out=&amp;EM_LIB..sorted;
+	by EM_SUBHZRD1_SURV;
+run;
+proc print data=&amp;EM_LIB..sorted (obs=100) NOOBS
+	split='*' ;
+	var acctno EM_SUBHZRD1_SURV;
+	label EM_SUBHZRD1_SURV='Probability of Upgrade:*============';
+	title &quot;Top 100 With Lowest Probability at Forecast Interval&quot;;
+run;
+ 
+ 
+ 
+ 
+ 
+ 
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE2" X="324" Y="170" DESCRIPTION="SAS Code (Add _t_ variable)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+data &amp;EM_EXPORT_SCORE;
+	set &amp;EM_IMPORT_DATA;
+	by acctno;
+	if last.acctno;
+	format _currentdate MMDDYY10.0 ;
+   _currentdate=input(&quot;31DEC2000&quot;,anydtdte10.);
+   _t_=intck(&quot;MONTH&quot;,initdate, _currentdate);
+   drop Target _currentdate;
+run;
+ 
+ 
+ 
+ 
+ 
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="122" Y="66" DESCRIPTION="Phone Plan" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<PROPERTIES Component="DataSource" Description="" Role="RAW" Library="SAMPSIO" Table="PHONEPLAN_TVC" ForceRun="N" ComputeStatistics="N" DataSource="" DataSelection="USERTABLE" NewTable="SAMPSIO.PHONEPLAN_TVC" OutputType="VIEW" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" NObs="4564" NCols="13" NBytes="459776" Segment="" ApplyMaxClassLevels="Y" DropMapVariables="N">
+<EmVariableAttributes>
+<DELTA Variable="acctno" AttributeName="ROLE" AttributeValue="ID"/>
+<DELTA Variable="event" AttributeName="ROLE" AttributeValue="TARGET"/>
+<DELTA Variable="event" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="eventdate" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="initdate" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="paywithcc" AttributeName="LEVEL" AttributeValue="BINARY"/>
+</EmVariableAttributes>
+<EmTargetAttributes>
+<event>
+<DecData Table="EMWS7.Ids_event_DD">
+<Data>
+<Obs EVENT="2" COUNT="145" DATAPRIOR="0.0317703769" TRAINPRIOR="0.0317703769" DECPRIOR="." DECISION1="1" DECISION2="0" DECISION3="0"/>
+<Obs EVENT="1" COUNT="1549" DATAPRIOR="0.3393952673" TRAINPRIOR="0.3393952673" DECPRIOR="." DECISION1="0" DECISION2="1" DECISION3="0"/>
+<Obs EVENT="0" COUNT="2870" DATAPRIOR="0.6288343558" TRAINPRIOR="0.6288343558" DECPRIOR="." DECISION1="0" DECISION2="0" DECISION3="1"/>
+</Data>
+<Metadata>
+<Variable NAME="event" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="COUNT" LABEL="Level Counts" LENGTH="8" FORMAT="10." TYPE="N"/>
+<Variable NAME="DATAPRIOR" LABEL="Data Proportions" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="TRAINPRIOR" LABEL="Training Proportions" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="DECPRIOR" LABEL="Decision Priors" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="DECISION1" LABEL="2" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="DECISION2" LABEL="1" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="DECISION3" LABEL="0" LENGTH="8" FORMAT="" TYPE="N"/>
+</Metadata>
+</DecData>
+<DecMeta Table="EMWS7.Ids_event_DM">
+<Data>
+<Obs _TYPE_="MATRIX" VARIABLE="" LABEL="" LEVEL="PROFIT" EVENT="" ORDER="" FORMAT="" TYPE="" COST="" USE="N"/>
+<Obs _TYPE_="TARGET" VARIABLE="event" LABEL="" LEVEL="NOMINAL" EVENT="2" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
+<Obs _TYPE_="DECISION" VARIABLE="DECISION1" LABEL="2" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE="Y"/>
+<Obs _TYPE_="DECISION" VARIABLE="DECISION2" LABEL="1" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE="Y"/>
+<Obs _TYPE_="DECISION" VARIABLE="DECISION3" LABEL="0" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE="Y"/>
+<Obs _TYPE_="DATAPRIOR" VARIABLE="DATAPRIOR" LABEL="Data Prior" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE="N"/>
+<Obs _TYPE_="TRAINPRIOR" VARIABLE="TRAINPRIOR" LABEL="Training Prior" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE="N"/>
+<Obs _TYPE_="DECPRIOR" VARIABLE="DECPRIOR" LABEL="Decision Prior" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE="N"/>
+<Obs _TYPE_="PREDICTED" VARIABLE="P_event2" LABEL="Predicted: event=2" LEVEL="2" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
+<Obs _TYPE_="RESIDUAL" VARIABLE="R_event2" LABEL="Residual: event=2" LEVEL="2" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
+<Obs _TYPE_="PREDICTED" VARIABLE="P_event1" LABEL="Predicted: event=1" LEVEL="1" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
+<Obs _TYPE_="RESIDUAL" VARIABLE="R_event1" LABEL="Residual: event=1" LEVEL="1" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
+<Obs _TYPE_="PREDICTED" VARIABLE="P_event0" LABEL="Predicted: event=0" LEVEL="0" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
+<Obs _TYPE_="RESIDUAL" VARIABLE="R_event0" LABEL="Residual: event=0" LEVEL="0" EVENT="" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
+<Obs _TYPE_="FROM" VARIABLE="F_event" LABEL="From: event" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="C" COST="" USE=""/>
+<Obs _TYPE_="INTO" VARIABLE="I_event" LABEL="Into: event" LEVEL="" EVENT="" ORDER="" FORMAT="" TYPE="C" COST="" USE=""/>
+</Data>
+<Metadata>
+<Variable NAME="_TYPE_" LABEL="Type" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="VARIABLE" LABEL="Variable" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="LABEL" LABEL="Label" LENGTH="40" FORMAT="" TYPE="C"/>
+<Variable NAME="LEVEL" LABEL="Measurement Level" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="EVENT" LABEL="Target Event" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="ORDER" LABEL="Order" LENGTH="10" FORMAT="" TYPE="C"/>
+<Variable NAME="FORMAT" LABEL="Format" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="TYPE" LABEL="Type" LENGTH="1" FORMAT="" TYPE="C"/>
+<Variable NAME="COST" LABEL="Cost" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="USE" LABEL="Use" LENGTH="1" FORMAT="" TYPE="C"/>
+</Metadata>
+</DecMeta>
+</event>
+</EmTargetAttributes>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids2" X="126" Y="170" DESCRIPTION="Phone Plan for Scoring" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<PROPERTIES Component="DataSource" Description="" Role="RAW" Library="SAMPSIO" Table="PHONEPLAN_TVC" ForceRun="N" ComputeStatistics="N" DataSource="" DataSelection="USERTABLE" NewTable="SAMPSIO.PHONEPLAN_TVC" OutputType="VIEW" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" NObs="4564" NCols="13" NBytes="459776" Segment="" ApplyMaxClassLevels="Y" DropMapVariables="N">
+<EmVariableAttributes>
+<DELTA Variable="acctno" AttributeName="ROLE" AttributeValue="ID"/>
+<DELTA Variable="event" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="eventdate" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="initdate" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="paywithcc" AttributeName="LEVEL" AttributeValue="BINARY"/>
+</EmVariableAttributes>
+<EmTargetAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="Survival" ID="SURV" X="329" Y="66" DESCRIPTION="Survival" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="APPS" TOOLPREFIX="SURV">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMAPPS.SURVIVAL.SOURCE" DATAFORMAT="CHANGETIME" TIMEUNIT="MONTH" TRUNCATION="N" SAMPLING="N" SPARAM="0.2" SampSeed="12345" TIMECOVINTS="S" STEPWISE="N" SLENTRY="0.05" SLSTAY="0.05" KNOT_STEPWISE="N" ModelValidation="DEFAULT" INTLEN="2" MRL="NONE" MAXMRLDEFAULT="Y" MAXLIFE="60" fctunitdefault="Y" ForecastTimeUnit="6" REPORTTABLES="NONE" RiskTable="FIXEDNUMBER" RiskPercentile="1" NUMHIGHRISK="100" NUMKNOTS="5" ForceRun="N" RunAction="Train" Component="Survival" Interactions="" SCRTYPE="INT" NTU="1" EXTRAPOINT="50" TRUNCTIME="" CENSTIME="" SCORETIME="">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<TIMEIDTABLE Type="DATA">
+<Data>
+<Obs ROLE="Start Time Variable" TIMEID="initdate"/>
+<Obs ROLE="End Time Variable" TIMEID="eventdate"/>
+<Obs ROLE="Change-Time Variable" TIMEID="changedate"/>
+</Data>
+<Metadata>
+<Variable NAME="Role" LABEL="Time ID Role" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="TimeID" LABEL="Time ID Variable" LENGTH="32" FORMAT="" TYPE="C"/>
+</Metadata>
+</TIMEIDTABLE>
+<TRAINTIMESELECTION Type="DATA">
+<Data>
+<Obs _INDEX_="1" DATE="14487"/>
+<Obs _INDEX_="0" DATE="14517"/>
+<Obs _INDEX_="0" DATE="14548"/>
+<Obs _INDEX_="0" DATE="14578"/>
+<Obs _INDEX_="0" DATE="14609"/>
+<Obs _INDEX_="0" DATE="14640"/>
+<Obs _INDEX_="0" DATE="14669"/>
+<Obs _INDEX_="0" DATE="14700"/>
+<Obs _INDEX_="0" DATE="14730"/>
+<Obs _INDEX_="0" DATE="14761"/>
+<Obs _INDEX_="0" DATE="14791"/>
+<Obs _INDEX_="0" DATE="14822"/>
+<Obs _INDEX_="0" DATE="14853"/>
+<Obs _INDEX_="0" DATE="14883"/>
+<Obs _INDEX_="0" DATE="14914"/>
+<Obs _INDEX_="0" DATE="14944"/>
+<Obs _INDEX_="2" DATE="14975"/>
+<Obs _INDEX_="0" DATE="15006"/>
+</Data>
+<Metadata>
+<Variable NAME="_INDEX_" LABEL="" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="DATE" LABEL="" LENGTH="8" FORMAT="DATE9." TYPE="N"/>
+</Metadata>
+</TRAINTIMESELECTION>
+<SCORETIMESELECTION Type="DATA">
+<Data>
+<Obs DATE="14457" _INDEX_="0"/>
+<Obs DATE="14488" _INDEX_="0"/>
+<Obs DATE="14518" _INDEX_="0"/>
+<Obs DATE="14549" _INDEX_="0"/>
+<Obs DATE="14579" _INDEX_="0"/>
+<Obs DATE="14610" _INDEX_="0"/>
+<Obs DATE="14641" _INDEX_="0"/>
+<Obs DATE="14670" _INDEX_="0"/>
+<Obs DATE="14701" _INDEX_="0"/>
+<Obs DATE="14731" _INDEX_="0"/>
+<Obs DATE="14762" _INDEX_="0"/>
+<Obs DATE="14792" _INDEX_="0"/>
+<Obs DATE="14823" _INDEX_="0"/>
+<Obs DATE="14854" _INDEX_="1"/>
+<Obs DATE="14884" _INDEX_="0"/>
+<Obs DATE="14915" _INDEX_="0"/>
+<Obs DATE="14945" _INDEX_="0"/>
+</Data>
+<Metadata>
+<Variable NAME="DATE" LABEL="" LENGTH="8" FORMAT="DATE9." TYPE="N"/>
+<Variable NAME="_INDEX_" LABEL="" LENGTH="8" FORMAT="" TYPE="N"/>
+</Metadata>
+</SCORETIMESELECTION>
+<INTERACTION Type="DATA">
+<Data>
+<Obs KEY="0" TERM="cum_dial_add"/>
+<Obs KEY="1" TERM="cum_dsl_add"/>
+<Obs KEY="2" TERM="cum_isdn_add"/>
+<Obs KEY="3" TERM="n_dial"/>
+<Obs KEY="4" TERM="n_dsl"/>
+<Obs KEY="5" TERM="n_isdn"/>
+</Data>
+<Metadata>
+<Variable NAME="key" LABEL="" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="Term" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+</Metadata>
+</INTERACTION>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMUTIL.EMSCORE.CLASS" COMPONENT="Score" ID="Score" X="534" Y="66" DESCRIPTION="Score" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="Score">
+<PROPERTIES OutputType="VIEW" FixedOutputNames="Y" HideVariables="N" HideInput="Y" HideTarget="Y" HideRejected="Y" HideAssess="Y" HidePredict="Y" HideFreq="Y" HideClassification="Y" HideResidual="Y" HideOther="Y" ScoreValidate="N" ScoreTest="N" CScore="Y" JScore="Y" PackageName="DEFAULT" UserPackageName="" PreferenceName="" OptimizedCode="Y" GraphReports="Y" ForceRun="N" RunAction="Train" Component="Score">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+</NODES>
+<CONNECTIONS>
+<CONNECTION FROM="Score" TO="EMCODE"/>
+<CONNECTION FROM="SURV" TO="Score"/>
+<CONNECTION FROM="Ids" TO="SURV"/>
+<CONNECTION FROM="Ids2" TO="EMCODE2"/>
+<CONNECTION FROM="EMCODE2" TO="Score"/>
+</CONNECTIONS>
+<NOTES>
+<DATA><![CDATA[
+
+
+
+
+
+]]>
+</DATA>
+</NOTES>
+</Workspace>
+</_ROOT_>

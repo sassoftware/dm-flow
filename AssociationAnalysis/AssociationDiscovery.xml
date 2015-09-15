@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><_ROOT_ EMVERSION="13.2" ORIENTATION="HORIZONTAL">
+<!--
+Copyright SAS Institute
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ 
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<Workspace>
+<NODES>
+<NODE CLASS="SASHELP.EMEXPL.ASSOCIATE.CLASS" COMPONENT="Association" ID="Assoc" X="294" Y="66" DESCRIPTION="Association" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="Assoc">
+<PROPERTIES ItemCount="2" AssocSupportType="PERCENT" SeqSupportType="PERCENT" SupportA="." MinConf="50" PctsupA="10" PctsupS="10" SupportS="." ChainCount="2" ConsolTime="0" MaxDur="." Criterion="DEFAULT" NumRules="200" NumTransposeRules="200" MaxItems="100000" ExportIdRule="Y" Recommendation="Y" ForceRun="N" RunAction="Train" Component="Association">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes>
+<DELTA Variable="TIME" AttributeName="USE" AttributeValue="N"/>
+</EmVariableAttributes>
+<EmFileProperties>
+<RULESFILTER Type="DATA">
+<Data>
+<Obs RULE="mutual_fund ==&gt; new_job" TRANSPOSE="0"/>
+<Obs RULE="marriage ==&gt; CD" TRANSPOSE="0"/>
+<Obs RULE="new_job ==&gt; mutual_fund" TRANSPOSE="0"/>
+<Obs RULE="CD ==&gt; marriage" TRANSPOSE="0"/>
+<Obs RULE="graduate ==&gt; close_loan" TRANSPOSE="0"/>
+<Obs RULE="close_loan ==&gt; graduate" TRANSPOSE="0"/>
+<Obs RULE="open_loan ==&gt; savings" TRANSPOSE="0"/>
+<Obs RULE="mutual_fund ==&gt; credit_card" TRANSPOSE="0"/>
+<Obs RULE="credit_card ==&gt; mutual_fund" TRANSPOSE="0"/>
+<Obs RULE="new_job ==&gt; credit_card" TRANSPOSE="0"/>
+<Obs RULE="open_loan ==&gt; money_market" TRANSPOSE="0"/>
+<Obs RULE="savings ==&gt; money_market" TRANSPOSE="0"/>
+<Obs RULE="marriage ==&gt; new_car" TRANSPOSE="0"/>
+<Obs RULE="CD ==&gt; new_car" TRANSPOSE="0"/>
+<Obs RULE="close_loan ==&gt; IRA" TRANSPOSE="0"/>
+<Obs RULE="graduate ==&gt; IRA" TRANSPOSE="0"/>
+<Obs RULE="checking ==&gt; credit_card" TRANSPOSE="0"/>
+<Obs RULE="credit_card ==&gt; checking" TRANSPOSE="0"/>
+<Obs RULE="mutual_fund ==&gt; checking" TRANSPOSE="0"/>
+<Obs RULE="new_job ==&gt; checking" TRANSPOSE="0"/>
+<Obs RULE="new_home ==&gt; money_market" TRANSPOSE="0"/>
+<Obs RULE="new_car ==&gt; baby" TRANSPOSE="0"/>
+<Obs RULE="baby ==&gt; new_car" TRANSPOSE="0"/>
+<Obs RULE="marriage ==&gt; baby" TRANSPOSE="0"/>
+<Obs RULE="CD ==&gt; baby" TRANSPOSE="0"/>
+<Obs RULE="safe_deposit ==&gt; IRA" TRANSPOSE="0"/>
+<Obs RULE="IRA ==&gt; safe_deposit" TRANSPOSE="0"/>
+<Obs RULE="close_loan ==&gt; safe_deposit" TRANSPOSE="0"/>
+<Obs RULE="graduate ==&gt; safe_deposit" TRANSPOSE="0"/>
+<Obs RULE="new_job ==&gt; money_market" TRANSPOSE="0"/>
+<Obs RULE="graduate ==&gt; money_market" TRANSPOSE="0"/>
+<Obs RULE="CD ==&gt; checking" TRANSPOSE="0"/>
+<Obs RULE="CD ==&gt; safe_deposit" TRANSPOSE="0"/>
+<Obs RULE="marriage ==&gt; safe_deposit" TRANSPOSE="0"/>
+<Obs RULE="new_job ==&gt; safe_deposit" TRANSPOSE="0"/>
+<Obs RULE="money_market ==&gt; safe_deposit" TRANSPOSE="0"/>
+<Obs RULE="graduate ==&gt; baby" TRANSPOSE="0"/>
+<Obs RULE="open_loan ==&gt; safe_deposit" TRANSPOSE="0"/>
+</Data>
+<Metadata>
+<Variable NAME="RULE" LABEL="Rule" LENGTH="31" FORMAT="" TYPE="C"/>
+<Variable NAME="Transpose" LABEL="Transpose Rule" LENGTH="8" FORMAT="" TYPE="N"/>
+</Metadata>
+</RULESFILTER>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE" X="677" Y="66" DESCRIPTION="SAS Code (output results)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+%let NUM=200; /* The maximum number of rules created by the Association Node. This needs to be entered manually. */
+ 
+data _NULL_ &amp;EM_LIB..Rec; /*&amp;EM_LIB. is the macro variable that refers to this flow; Rec is the chosen dataset name.*/
+	set &amp;EM_IMPORT_SCORE.; /* &amp;EM_IMPORT_SCORE is the macro variable that refers to incoming Score data. */
+	length RULE_LABEL $200; /* Sets the maximum number of characters alloted to the rule label */
+	array rule_array(*) RULE1-RULE&amp;NUM. ; /* Collects all the rules into an array so that they can be iterated over */
+	do i=1 to dim(rule_array);
+		if rule_array(i) = 1 then do;
+			RULE_ID = cats(&quot;RULE&quot;,i);		
+			call label(rule_array(i),RULE_LABEL); /* Extracts the label from the rule so that the label can be displayed */
+			keep CUSTOMER RULE_ID RULE_LABEL; output &amp;EM_LIB..Rec;
+		end;
+	end;
+run;
+proc print data=&amp;EM_LIB..Rec; /* Prints out the results */
+run;
+ 
+ 
+ 
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="96" Y="66" DESCRIPTION="Market Sequences" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<PROPERTIES Component="DataSource" Description="" Role="TRANSACTION" Library="SAMPSIO" Table="MSEQ2" ForceRun="N" ComputeStatistics="N" DataSource="" DataSelection="USERTABLE" NewTable="SAMPSIO.MSEQ2" OutputType="VIEW" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" NObs="564" NCols="3" NBytes="66560" Segment="" ApplyMaxClassLevels="Y" DropMapVariables="N">
+<VariableProperties/>
+<EmVariableAttributes>
+<DELTA Variable="ACTION" AttributeName="ROLE" AttributeValue="TARGET"/>
+<DELTA Variable="CUSTOMER" AttributeName="ROLE" AttributeValue="ID"/>
+<DELTA Variable="CUSTOMER" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="TIME" AttributeName="ROLE" AttributeValue="SEQUENCE"/>
+</EmVariableAttributes>
+<EmTargetAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids2" X="293" Y="161" DESCRIPTION="Market Sequences" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<PROPERTIES Component="DataSource" Description="" Role="SCORE" Library="SAMPSIO" Table="MSEQ2" ForceRun="N" ComputeStatistics="N" DataSource="" DataSelection="USERTABLE" NewTable="SAMPSIO.MSEQ2" OutputType="VIEW" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" NObs="564" NCols="3" NBytes="66560" Segment="" ApplyMaxClassLevels="Y" DropMapVariables="N">
+<VariableProperties/>
+<EmVariableAttributes>
+<DELTA Variable="ACTION" AttributeName="ROLE" AttributeValue="TARGET"/>
+<DELTA Variable="CUSTOMER" AttributeName="ROLE" AttributeValue="ID"/>
+<DELTA Variable="CUSTOMER" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="TIME" AttributeName="ROLE" AttributeValue="SEQUENCE"/>
+</EmVariableAttributes>
+<EmTargetAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMUTIL.EMSCORE.CLASS" COMPONENT="Score" ID="Score" X="492" Y="66" DESCRIPTION="Score" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="Score">
+<PROPERTIES OutputType="VIEW" FixedOutputNames="Y" HideVariables="N" HideInput="Y" HideTarget="Y" HideRejected="Y" HideAssess="Y" HidePredict="Y" HideFreq="Y" HideClassification="Y" HideResidual="Y" HideOther="Y" ScoreValidate="N" ScoreTest="N" CScore="Y" JScore="Y" PackageName="DEFAULT" UserPackageName="" PreferenceName="" OptimizedCode="Y" GraphReports="Y" ForceRun="N" RunAction="Train" Component="Score">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+</NODES>
+<CONNECTIONS>
+<CONNECTION FROM="Ids" TO="Assoc"/>
+<CONNECTION FROM="Assoc" TO="Score"/>
+<CONNECTION FROM="Ids2" TO="Score"/>
+<CONNECTION FROM="Score" TO="EMCODE"/>
+</CONNECTIONS>
+<NOTES>
+<DATA><![CDATA[
+
+
+]]>
+</DATA>
+</NOTES>
+</Workspace>
+</_ROOT_>

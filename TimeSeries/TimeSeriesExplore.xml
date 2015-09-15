@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?><_ROOT_ EMVERSION="13.2" ORIENTATION="HORIZONTAL">
+<!--
+Copyright SAS Institute
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ 
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<Workspace>
+<NODES>
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="87" Y="63" DESCRIPTION="Cosmetic Sales" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<PROPERTIES DataSource="cosmeticsales" Scope="LOCAL" Role="TRANSACTION" Library="SAMPSIO" Table="COSMETIC" NCols="5" NObs="2700" NBytes="132096" Segment="" DataSourceRole="TRANSACTION" OutputType="VIEW" ForceRun="N" ComputeStatistics="N" DataSelection="DATASOURCE" NewTable="" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" ApplyMaxClassLevels="Y" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" DropMapVariables="Y" DsId="cosmeticsales" DsSampleName="" DsSampleSizeType="" DsSampleSize="" DsCreatedBy="fgunes" DsCreateDate="1749047144.6" DsModifiedBy="fgunes" DsModifyDate="1749047144.6" DsScope="LOCAL" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" RunAction="Train" Component="DataSource" Description="">
+<VariableProperties/>
+<EmVariableAttributes>
+<DELTA Variable="SALES" AttributeName="ROLE" AttributeValue="TARGET"/>
+<DELTA Variable="SKU" AttributeName="ROLE" AttributeValue="CROSSID"/>
+<DELTA Variable="group" AttributeName="ROLE" AttributeValue="CROSSID"/>
+<DELTA Variable="state" AttributeName="ROLE" AttributeValue="CROSSID"/>
+</EmVariableAttributes>
+<EmTargetAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMUTIL.EMMETADATA.CLASS" COMPONENT="Metadata" ID="Meta" X="488" Y="160" DESCRIPTION="Metadata" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="Meta">
+<PROPERTIES HideRejected="N" AdvancedAdvisor="N" CombineRule="NONE" ComputeStatistics="N" ForceRun="N" RunAction="Train" Component="Metadata">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes>
+<DELTA Variable="MNTH_YR" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_01" AttributeName="NEWROLE" AttributeValue="TARGET"/>
+<DELTA Variable="_TS_01" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_02" AttributeName="NEWROLE" AttributeValue="TARGET"/>
+<DELTA Variable="_TS_02" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_03" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_04" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_05" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_06" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_07" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_08" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_09" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_10" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_11" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_12" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_13" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_14" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_15" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_16" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_17" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_18" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_19" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_20" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_21" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_22" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_23" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_24" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_TS_25" AttributeName="HIDDEN" AttributeValue="N"/>
+</EmVariableAttributes>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+<METACODE_TRANSACTION Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+*------------------------------------------------------------*;
+* Metadata Changes;
+*------------------------------------------------------------*;
+if upcase(NAME) = &quot;_TS_01&quot; then ROLE=&quot;TARGET&quot;;
+if upcase(NAME) = &quot;_TS_02&quot; then ROLE=&quot;TARGET&quot;;
+ 
+]]>
+</Data>
+</METACODE_TRANSACTION>
+<VARIABLEPROPERTIES_TRANSACTION Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+*------------------------------------------------------------*;
+* Variable Attributes for TRANSACTION;
+*------------------------------------------------------------*;
+if upcase(NAME) = &quot;_TS_01&quot; then NEWROLE=&quot;TARGET&quot;;
+if upcase(NAME) = &quot;_TS_02&quot; then NEWROLE=&quot;TARGET&quot;;
+ 
+]]>
+</Data>
+</VARIABLEPROPERTIES_TRANSACTION>
+<IMPORTSET Type="DATA">
+<Data>
+<Obs USE="Y" PORT="DATA" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="VALIDATE" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="TEST" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="SCORE" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="TRANSACTION" NODELABEL="TSDP" NODEPORT="TRANSACTION" LIBNAME="" DATASET="TSDP_TRANSACTION" ROLE="TRANSACTION" MODTIME="1749130740.5" COLUMNMETA="TSDP_CMeta_TRANSACTION" COLUMNMETAMODTIME="1749130740.9" EMINFO="TSDP_EMINFO" EMINFOMODTIME="1749130741" NOBS="36" DATASOURCE="cosmeticsales"/>
+<Obs USE="Y" PORT="DOCUMENT" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="CLUSMEAN" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="CLUSSTAT" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="ESTIMATE" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="RANK" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="REPORTFIT" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="RULES" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="SCOREDIST" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="TERMS" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="TREE" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="VARMAP" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+</Data>
+<Metadata>
+<Variable NAME="USE" LABEL="" LENGTH="1" FORMAT="" TYPE="C"/>
+<Variable NAME="PORT" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="NODELABEL" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="NODEPORT" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="LIBNAME" LABEL="" LENGTH="8" FORMAT="" TYPE="C"/>
+<Variable NAME="DATASET" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="ROLE" LABEL="" LENGTH="20" FORMAT="" TYPE="C"/>
+<Variable NAME="MODTIME" LABEL="" LENGTH="8" FORMAT="DATETIME20." TYPE="N"/>
+<Variable NAME="COLUMNMETA" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="COLUMNMETAMODTIME" LABEL="" LENGTH="8" FORMAT="DATETIME20." TYPE="N"/>
+<Variable NAME="EMINFO" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="EMINFOMODTIME" LABEL="" LENGTH="8" FORMAT="DATETIME20." TYPE="N"/>
+<Variable NAME="NOBS" LABEL="" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="DATASOURCE" LABEL="" LENGTH="29" FORMAT="" TYPE="C"/>
+</Metadata>
+</IMPORTSET>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TSDP" ID="TSDP" X="288" Y="64" DESCRIPTION="TS Data Preparation" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TSDM" TOOLPREFIX="TSDP">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMTSDM.TSDP.SOURCE" TimeIntervalSel="AUTO" TimeInterval="AUTO" UserLengthCycle="2" LengthCycleSel="DEFAULT" Missing="MISSING" Accumulation="TOTAL" MissingConstant="0.0" Transform="NONE" BoxCoxPara="0.0" ApplyDIF="N" DIF="1" ApplySDIF="N" ExportedDs="SEASON" TransExportedDs="Y" TrendDefaultNPeriods="Y" TrendNPeriods="24" ODSGraphs="NONE" CreateTSID="Y" Transpose="Y" TransByVar="BYTSID" KeepVarRole="N" ZeroMiss="NONE" StartEndTime="DEFAULT" NMaxTSPlot="100" ExportSeasonStat="N" SeasonStat="SUM" ForceRun="N" RunAction="Train" Component="TSDP" TimeOfDay="DEFAULT" MergeClus="N" SaveMergedDs="DEFAULT" LibnameExtDs="WORK" NameExtDs="TS_SEGMENT_DS" ClusterInput="N" Start="DEFAULT" End="DEFAULT" AtomicData="N" InputDataType="DEFAULT">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes>
+<DELTA Variable="group" AttributeName="USE" AttributeValue="N"/>
+</EmVariableAttributes>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<TIMESTARTANDEND Type="DATA">
+<Data>
+<Obs DATE="13149" _INDEX_="1"/>
+<Obs DATE="13180" _INDEX_="0"/>
+<Obs DATE="13209" _INDEX_="0"/>
+<Obs DATE="13240" _INDEX_="0"/>
+<Obs DATE="13270" _INDEX_="0"/>
+<Obs DATE="13301" _INDEX_="0"/>
+<Obs DATE="13331" _INDEX_="0"/>
+<Obs DATE="13362" _INDEX_="0"/>
+<Obs DATE="13393" _INDEX_="0"/>
+<Obs DATE="13423" _INDEX_="0"/>
+<Obs DATE="13454" _INDEX_="0"/>
+<Obs DATE="13484" _INDEX_="0"/>
+<Obs DATE="13515" _INDEX_="0"/>
+<Obs DATE="13546" _INDEX_="0"/>
+<Obs DATE="13574" _INDEX_="0"/>
+<Obs DATE="13605" _INDEX_="0"/>
+<Obs DATE="13635" _INDEX_="0"/>
+<Obs DATE="13666" _INDEX_="0"/>
+<Obs DATE="13696" _INDEX_="0"/>
+<Obs DATE="13727" _INDEX_="0"/>
+<Obs DATE="13758" _INDEX_="0"/>
+<Obs DATE="13788" _INDEX_="0"/>
+<Obs DATE="13819" _INDEX_="0"/>
+<Obs DATE="13849" _INDEX_="0"/>
+<Obs DATE="13880" _INDEX_="0"/>
+<Obs DATE="13911" _INDEX_="0"/>
+<Obs DATE="13939" _INDEX_="0"/>
+<Obs DATE="13970" _INDEX_="0"/>
+<Obs DATE="14000" _INDEX_="0"/>
+<Obs DATE="14031" _INDEX_="0"/>
+<Obs DATE="14061" _INDEX_="0"/>
+<Obs DATE="14092" _INDEX_="0"/>
+<Obs DATE="14123" _INDEX_="0"/>
+<Obs DATE="14153" _INDEX_="0"/>
+<Obs DATE="14184" _INDEX_="0"/>
+<Obs DATE="14214" _INDEX_="2"/>
+</Data>
+<Metadata>
+<Variable NAME="DATE" LABEL="Time ID" LENGTH="8" FORMAT="MONYY7." TYPE="N"/>
+<Variable NAME="_INDEX_" LABEL="" LENGTH="8" FORMAT="" TYPE="N"/>
+</Metadata>
+</TIMESTARTANDEND>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TSSIM" ID="TSSIM" X="489" Y="65" DESCRIPTION="TS Similarity (General)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TSDM" TOOLPREFIX="TSSIM">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMTSDM.TSSIM.SOURCE" TimeInterval="AUTO" Accumulation="TOTAL" Measure="SQRDEV" Missing="ZERO" Slide="NONE" Normalization="STANDARD" Scale="NONE" NumSimPlot="5" SimPlotPreference="MOST" Compress="NONE" CompGlobalAbs="0" CompGlobalPct="0" CompLocalAbs="0" CompLocalPct="0" Expand="NONE" ExpGlobalAbs="0" ExpGlobalPct="0" ExpLocalAbs="0" ExpLocalPct="0" Clustering="DEFAULT" OutputDS="DEFAULT" IncTargetInDist="N" NCluster="3" ForceRun="N" RunAction="Train" Component="TSSIM">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TSSIM" ID="TSSIM2" X="671" Y="160" DESCRIPTION="TS Similarity (Comparisons)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TSDM" TOOLPREFIX="TSSIM">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMTSDM.TSSIM.SOURCE" TimeInterval="AUTO" Accumulation="TOTAL" Measure="SQRDEV" Missing="ZERO" Slide="NONE" Normalization="STANDARD" Scale="NONE" NumSimPlot="5" SimPlotPreference="MOST" Compress="NONE" CompGlobalAbs="0" CompGlobalPct="0" CompLocalAbs="0" CompLocalPct="0" Expand="NONE" ExpGlobalAbs="0" ExpGlobalPct="0" ExpLocalAbs="0" ExpLocalPct="0" Clustering="DEFAULT" OutputDS="DEFAULT" IncTargetInDist="N" NCluster="3" ForceRun="N" RunAction="Train" Component="TSSIM">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+</NODES>
+<CONNECTIONS>
+<CONNECTION FROM="Ids" TO="TSDP"/>
+<CONNECTION FROM="TSDP" TO="Meta"/>
+<CONNECTION FROM="TSDP" TO="TSSIM"/>
+<CONNECTION FROM="Meta" TO="TSSIM2"/>
+</CONNECTIONS>
+<NOTES>
+<DATA><![CDATA[
+
+
+]]>
+</DATA>
+</NOTES>
+</Workspace>
+</_ROOT_>
