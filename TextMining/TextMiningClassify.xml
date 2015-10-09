@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><_ROOT_ EMVERSION="13.2" ORIENTATION="HORIZONTAL">
-<!--
-Copyright SAS Institute
- 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
- 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
 <Workspace>
 <NODES>
-<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE" X="1357" Y="263" DESCRIPTION="SAS Code" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE" X="1338" Y="263" DESCRIPTION="SAS Code" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
 <PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -40,6 +25,7 @@ run;
  
  
  
+ 
 ]]>
 </Data>
 </USERTRAINCODE>
@@ -49,7 +35,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="53" Y="196" DESCRIPTION="sampsio.news" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="59" Y="198" DESCRIPTION="sampsio.news" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
 <PROPERTIES Component="DataSource" Description="" Role="RAW" Library="SAMPSIO" Table="NEWS" ForceRun="N" ComputeStatistics="N" DataSource="" DataSelection="USERTABLE" NewTable="SAMPSIO.NEWS" OutputType="VIEW" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" NObs="600" NCols="5" NBytes="20079616" Segment="" ApplyMaxClassLevels="Y" DropMapVariables="N">
 <EmVariableAttributes>
 <DELTA Variable="graphics" AttributeName="ROLE" AttributeValue="REJECTED"/>
@@ -59,7 +45,7 @@ run;
 </EmVariableAttributes>
 <EmTargetAttributes>
 <newsgroup>
-<DecData Table="EMWS10.Ids_newsgroup_DD">
+<DecData Table="EMWS24.Ids_newsgroup_DD">
 <Data>
 <Obs NEWSGROUP="MEDICAL" COUNT="200" DATAPRIOR="0.3333333333" TRAINPRIOR="0.3333333333" DECPRIOR="." DECISION1="1" DECISION2="0" DECISION3="0"/>
 <Obs NEWSGROUP="HOCKEY" COUNT="200" DATAPRIOR="0.3333333333" TRAINPRIOR="0.3333333333" DECPRIOR="." DECISION1="0" DECISION2="1" DECISION3="0"/>
@@ -76,7 +62,7 @@ run;
 <Variable NAME="DECISION3" LABEL="GRAPHICS" LENGTH="8" FORMAT="" TYPE="N"/>
 </Metadata>
 </DecData>
-<DecMeta Table="EMWS10.Ids_newsgroup_DM">
+<DecMeta Table="EMWS24.Ids_newsgroup_DM">
 <Data>
 <Obs _TYPE_="MATRIX" VARIABLE="" LABEL="" LEVEL="PROFIT" EVENT="" ORDER="" FORMAT="" TYPE="" COST="" USE="N"/>
 <Obs _TYPE_="TARGET" VARIABLE="newsgroup" LABEL="" LEVEL="NOMINAL" EVENT="MEDICAL" ORDER="" FORMAT="" TYPE="C" COST="" USE=""/>
@@ -117,7 +103,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids2" X="1049" Y="164" DESCRIPTION="Scoring Data (sampsio.news)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids2" X="1030" Y="164" DESCRIPTION="Scoring Data (sampsio.news)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
 <PROPERTIES Component="DataSource" Description="" Role="SCORE" Library="SAMPSIO" Table="NEWS" ForceRun="N" ComputeStatistics="N" DataSource="" DataSelection="USERTABLE" NewTable="SAMPSIO.NEWS" OutputType="VIEW" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" NObs="600" NCols="5" NBytes="20079616" Segment="" ApplyMaxClassLevels="Y" DropMapVariables="N">
 <EmVariableAttributes>
 <DELTA Variable="graphics" AttributeName="ROLE" AttributeValue="REJECTED"/>
@@ -133,7 +119,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMMODL.MBR.CLASS" COMPONENT="MBR" ID="MBR" X="872" Y="65" DESCRIPTION="MBR" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="MBR">
+<NODE CLASS="SASHELP.EMMODL.MBR.CLASS" COMPONENT="MBR" ID="MBR" X="853" Y="65" DESCRIPTION="MBR" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="MBR">
 <PROPERTIES NumberOfNeighbors="16" Epsilon="0" Buckets="8" Method="RDTREE" Weighted="Y" ShowNodes="N" Neighbors="Y" ForceRun="N" RunAction="Train" Component="MBR">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -145,8 +131,8 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMASSMT.ASSESS.CLASS" COMPONENT="ModelCompare" ID="MdlComp" X="1049" Y="263" DESCRIPTION="Model Comparison" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="MdlComp">
-<PROPERTIES NumberOfReportedLevels="1E-6" NormalizeReportingVariables="Y" DecileBin="20" LiftEpsilon="1E-6" ProfitEpsilon="1E-6" RoiEpsilon="1E-6" ScoreDistBin="20" RocChart="Y" RocEpsilon="0.01" AssessAllTargetLevels="N" SelectionData="DEFAULT" HPCriteria="DEFAULT" SelectionTable="TRAIN" SelectionCriteria="DEFAULT" SelectionDepth="10" NumberofBins="20" RecomputeAssess="N" TargetName="newsgroup" ModelId="Neural" ModelDescription="Neural Network" ModelCriteria="Valid: Misclassification Rate" ForceRun="N" RunAction="Train" Component="ModelCompare" StatisticUsed="_VMISC_" TargetLabel="">
+<NODE CLASS="SASHELP.EMASSMT.ASSESS.CLASS" COMPONENT="ModelCompare" ID="MdlComp" X="1030" Y="263" DESCRIPTION="Model Comparison" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="MdlComp">
+<PROPERTIES NumberOfReportedLevels="1E-6" NormalizeReportingVariables="Y" DecileBin="20" LiftEpsilon="1E-6" ProfitEpsilon="1E-6" RoiEpsilon="1E-6" ScoreDistBin="20" RocChart="Y" RocEpsilon="0.01" AssessAllTargetLevels="N" SelectionData="DEFAULT" HPCriteria="DEFAULT" SelectionTable="TRAIN" SelectionCriteria="DEFAULT" SelectionDepth="10" NumberofBins="20" RecomputeAssess="N" TargetName="newsgroup" ModelId="Reg" ModelDescription="Regression" ModelCriteria="Valid: Misclassification Rate" ForceRun="N" RunAction="Train" Component="ModelCompare" StatisticUsed="_VMISC_" TargetLabel="">
 <VariableProperties/>
 <EmTargetAttributes/>
 <EmVariableAttributes/>
@@ -157,7 +143,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMMODL.NEURAL.CLASS" COMPONENT="NeuralNetwork" ID="Neural" X="872" Y="263" DESCRIPTION="Neural Network" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="Neural">
+<NODE CLASS="SASHELP.EMMODL.NEURAL.CLASS" COMPONENT="NeuralNetwork" ID="Neural" X="853" Y="263" DESCRIPTION="Neural Network" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="Neural">
 <PROPERTIES UseEstimates="N" NetworkArchitecture="MLP" DirectConnection="N" Hidden="3" Prelim="Y" PreliminaryRuns="5" PrelimMaxiter="10" PrelimMaxTime="1 HOUR" Maxiter="50" Maxtime="4 HOURS" TrainingTechnique="DEFAULT" ConvDefaults="Y" AbsConvValue="-1.34078E154" AbsFValue="0" AbsFTime="1" AbsGValue="0.00001" AbsGTime="1" AbsXValue="1E-8" AbsXTime="1" FConvValue="0" FConvTime="1" GConvValue="1E-6" GConvTime="1" ModelSelectionCriterion="PROFIT/LOSS" SuppressOutput="N" Residuals="Y" Standardizations="N" HiddenUnits="N" TrainCode="" PrelimOutest="" Outest="" Outfit="" InitialDs="" CodefileRes="" CodefileNoRes="" AddHidden="Y" HiddenCombFunction="DEFAULT" HiddenActivation="DEFAULT" HiddenBias="Y" TargetCombFunction="DEFAULT" TargetActivation="DEFAULT" TargetError="DEFAULT" TargetBias="Y" InitialSeed="12345" RandDist="NORMAL" RandScale="0.1" RandLoc="0" InputStandardization="STD" WeightDecay="0" Accelerate="1.2" Decelerate="0.5" Learn="0.1" MaxLearn="50" MinLearn="0.00001" Momentum="0" MaxMomentum="1.75" Tilt="0" ForceRun="N" RunAction="Train" Component="NeuralNetwork">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -173,7 +159,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMSAMP.EMDPART.CLASS" COMPONENT="Partition" ID="Part" X="690" Y="196" DESCRIPTION="Data Partition" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Part">
+<NODE CLASS="SASHELP.EMSAMP.EMDPART.CLASS" COMPONENT="Partition" ID="Part" X="211" Y="198" DESCRIPTION="Data Partition" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Part">
 <PROPERTIES Method="DEFAULT" TrainPct="70" ValidatePct="30" TestPct="0" RandomSeed="12345" OutputType="DATA" IntervalDistribution="Y" ClassDistribution="Y" ForceRun="N" RunAction="Train" Component="Partition">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -185,7 +171,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMMODL.REGRESSION.CLASS" COMPONENT="Regression" ID="Reg" X="872" Y="362" DESCRIPTION="Regression" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="Reg">
+<NODE CLASS="SASHELP.EMMODL.REGRESSION.CLASS" COMPONENT="Regression" ID="Reg" X="853" Y="362" DESCRIPTION="Regression" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="Reg">
 <PROPERTIES MainEffect="Y" TwoFactor="N" Polynomial="N" PolynomialDegree="2" Terms="N" Error="LOGISTIC" LinkFunction="LOGIT" SuppressIntercept="N" InputCoding="DEVIATION" MinResourceUse="N" ModelSelection="NONE" SelectionCriterion="DEFAULT" SelectionDefault="Y" Sequential="N" SlEntry="0.05" SlStay="0.05" Start="0" Stop="0" Force="0" Hierarchy="CLASS" Rule="NONE" MaxStep="." StepOutput="N" OptimizationTechnique="DEFAULT" ModelDefaults="Y" MaxIterations="." MaxFunctionCalls="." MaxCPUTime="1 HOUR" ConvDefaults="Y" AbsConvValue="-1.34078E154" AbsFValue="0" AbsFTime="1" AbsGValue="0.00001" AbsGTime="1" AbsXValue="1E-8" AbsXTime="1" FConvValue="0" FConvTimes="1" GConvValue="1E-6" GConvTimes="1" ClParm="N" Covout="N" CovB="N" CorB="N" Simple="N" SuppressOutput="N" Details="N" PrintDesignMatrix="N" SASSPDS="N" Performance="N" ExcludedVariable="REJECT" ForceRun="N" RunAction="Train" Component="Regression" Interactions="">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -201,7 +187,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMUTIL.EMSCORE.CLASS" COMPONENT="Score" ID="Score" X="1206" Y="263" DESCRIPTION="Score" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="Score">
+<NODE CLASS="SASHELP.EMUTIL.EMSCORE.CLASS" COMPONENT="Score" ID="Score" X="1187" Y="263" DESCRIPTION="Score" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="Score">
 <PROPERTIES OutputType="DATA" FixedOutputNames="Y" HideVariables="N" HideInput="Y" HideTarget="Y" HideRejected="Y" HideAssess="Y" HidePredict="Y" HideFreq="Y" HideClassification="Y" HideResidual="Y" HideOther="Y" ScoreValidate="N" ScoreTest="N" CScore="Y" JScore="Y" PackageName="DEFAULT" UserPackageName="" PreferenceName="" OptimizedCode="Y" GraphReports="Y" ForceRun="N" RunAction="Train" Component="Score">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -216,7 +202,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TextFilter" ID="TextFilter" X="368" Y="196" DESCRIPTION="Text Filter" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TM" TOOLPREFIX="TextFilter">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TextFilter" ID="TextFilter" X="519" Y="198" DESCRIPTION="Text Filter" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TM" TOOLPREFIX="TextFilter">
 <PROPERTIES Location="CATALOG" Catalog="SASHELP.EMTXTEXT.FILTER.SOURCE" spellCheck="N" spellSensitivity="Med" cellWeight="DEFAULT" termWeight="DEFAULT" minDocs="4" maxTerms="." resultTerms="ALL" maxviewTerms="20000" ForceRun="N" RunAction="Train" Component="TextFilter" spellDict="" searchPhrase="" searchVar="" whereDoc="" lastfilternode="" lastparsenode="" synonymImport="" saveSynDS="" spellDS="" interStopDS="" interSynDS="" filters="">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -240,7 +226,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TextParsing" ID="TextParsing" X="209" Y="196" DESCRIPTION="Text Parsing" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TM" TOOLPREFIX="TextParsing">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TextParsing" ID="TextParsing" X="365" Y="198" DESCRIPTION="Text Parsing" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TM" TOOLPREFIX="TextParsing">
 <PROPERTIES Location="CATALOG" Catalog="SASHELP.EMTXTEXT.PARSE.SOURCE" language="ENGLISH" delimit="Std" bCapitalize="Y" bPartOfSpeech="Y" NounGroups="Y" multiDS="SASHELP.ENG_MULTI" bPatterns="NONE" stopList="SASHELP.ENGSTOP" ignorePOS="'AUX' 'CONJ' 'DET' 'INTERJ' 'PART' 'PREP' 'PRON'" ignoreAttrib="'NUM' 'PUNCT'" bStems="Y" synonymDS="SASHELP.ENGSYNMS" maxviewTerms="20000" filterLang="" ForceRun="N" RunAction="Train" Component="TextParsing" TGConcepts="" TGCategories="" ignoreEntities="" startList="" parseVar="TEXT">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -1196,7 +1182,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TextTopic" ID="TextTopic" X="531" Y="196" DESCRIPTION="Text Topic" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TM" TOOLPREFIX="TextTopic">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="TextTopic" ID="TextTopic" X="679" Y="198" DESCRIPTION="Text Topic" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TM" TOOLPREFIX="TextTopic">
 <PROPERTIES Location="CATALOG" Catalog="SASHELP.EMTXTEXT.TOPIC.SOURCE" topTermCnt="0" autoTopicCnt="25" autoTopic="false" ForceRun="N" RunAction="Train" Component="TextTopic" initTopics="" tm_topic_node="" tm_topic_dataset="" topics="" augTopics="">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -1230,7 +1216,7 @@ run;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="DecisionTree" ID="Tree" X="872" Y="164" DESCRIPTION="Decision Tree" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="Tree">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="DecisionTree" ID="Tree" X="853" Y="164" DESCRIPTION="Decision Tree" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="Tree">
 <PROPERTIES TrainMode="BATCH" Freeze="N" UseMultipleTarget="N" NominalCriterion="PROBCHISQ" OrdinalCriterion="ENTROPY" IntervalCriterion="PROBF" Criterion="DEFAULT" SplitPrecision="4" Precision="4" SigLevel="0.2" Splitsize="." LeafSize="5" MinCatSize="5" Maxbranch="2" Maxdepth="6" Nrules="5" Nsurrs="0" MissingValue="USEINSEARCH" UseVarOnce="N" Subtree="ASSESSMENT" NSubtree="1" AssessMeasure="MISC" AssessPercentage="0.25" NodeSample="20000" Exhaustive="5000" UseDecision="N" UsePriors="N" Kass="Y" KassApply="BEFORE" Depth="Y" Inputs="N" NumInputs="1" VarSelection="Y" Dummy="N" Leafid="Y" Predict="Y" NodeRole="SEGMENT" Performance="DISK" CV="N" CVNIter="10" CVRepeat="1" CVSeed="12345" ObsImportance="N" NumSingleImp="5" ForceRun="N" RunAction="Train" Component="DecisionTree" Catalog="SASHELP.EMMODL.TREE.SOURCE" Location="CATALOG" ImportModel="N" ImportedTreeData="" CreateSample="DEFAULT" SampleMethod="RANDOM" SampleSize="10000" SampleSeed="12345" ClassColorBy="PERCENTCORRECT" IntColorBy="AVG" ShowNodeId="Y" ShowValid="Y" Pred="N" Target="ALL" Count="Y" PercentCorrect="N" ProfitLoss="NONE" AVG="Y" RASE="N" ToolType="MODEL">
 <VariableProperties/>
 <EmTargetAttributes/>
@@ -1255,20 +1241,21 @@ run;
 <CONNECTION FROM="Score" TO="EMCODE"/>
 <CONNECTION FROM="Tree" TO="MdlComp"/>
 <CONNECTION FROM="Ids2" TO="Score"/>
-<CONNECTION FROM="TextTopic" TO="Part"/>
-<CONNECTION FROM="Part" TO="Neural"/>
-<CONNECTION FROM="Part" TO="Tree"/>
-<CONNECTION FROM="Part" TO="Reg"/>
-<CONNECTION FROM="Part" TO="MBR"/>
 <CONNECTION FROM="MBR" TO="MdlComp"/>
 <CONNECTION FROM="Reg" TO="MdlComp"/>
 <CONNECTION FROM="Neural" TO="MdlComp"/>
-<CONNECTION FROM="Ids" TO="TextParsing"/>
 <CONNECTION FROM="TextParsing" TO="TextFilter"/>
 <CONNECTION FROM="TextFilter" TO="TextTopic"/>
+<CONNECTION FROM="Ids" TO="Part"/>
+<CONNECTION FROM="Part" TO="TextParsing"/>
+<CONNECTION FROM="TextTopic" TO="MBR"/>
+<CONNECTION FROM="TextTopic" TO="Tree"/>
+<CONNECTION FROM="TextTopic" TO="Neural"/>
+<CONNECTION FROM="TextTopic" TO="Reg"/>
 </CONNECTIONS>
 <NOTES>
 <DATA><![CDATA[
+
 
 
 
