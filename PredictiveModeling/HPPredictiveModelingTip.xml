@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><_ROOT_ EMVERSION="14.1" ORIENTATION="HORIZONTAL">
 <Workspace>
 <NODES>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMForest" ID="HPDMForest" X="611" Y="129" DESCRIPTION="HP Forest" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPDMForest">
-<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPDMFOREST.SOURCE" ToolType="MODEL" ALPHA="0.05" CATBINS="30" EXHAUSTIVE="5000" LEAFSIZEMETHOD="DEFAULT" LEAFFRACTION="0.00001" LEAFSIZE="1" MAXDEPTH="50" MAXTREES="100" MINCATSIZE="5" SEED="12345" SPLITSIZE="." NUMOBSMETHOD="PERCENTAGE" TRAINFRACTION="0.6" TRAINN="." VARS_TO_TRY="." MISSING="USEINSEARCH" MINUSEINSEARCH="1" VARSELECT="Y" VIMETHOD="LOSSREDUCTION" RBATOPNUM="25" RBACUT="0.01" ForceRun="N" RunAction="Train" Component="HPDMForest">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMForest" ID="HPDMForest" X="617" Y="129" DESCRIPTION="HP Forest" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPDMForest">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPDMForest.SOURCE" ToolType="MODEL" ALPHA="0.05" CATBINS="30" EXHAUSTIVE="5000" LEAFSIZEMETHOD="DEFAULT" LEAFFRACTION="0.00001" LEAFSIZE="1" MAXDEPTH="50" MAXTREES="100" MINCATSIZE="5" SEED="12345" SPLITSIZE="." NUMOBSMETHOD="PERCENTAGE" TRAINFRACTION="0.6" TRAINN="." VARS_TO_TRY="." MISSING="USEINSEARCH" MINUSEINSEARCH="1" VARSELECT="Y" VIMETHOD="LOSSREDUCTION" RBATOPNUM="25" RBACUT="0.01" ForceRun="N" RunAction="Train" Component="HPDMForest">
 <VariableProperties/>
-<EmVariableAttributes/>
 <EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
@@ -16,10 +15,9 @@
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMExplore" ID="HPExpl" X="167" Y="150" DESCRIPTION="HP Explore" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPExpl">
-<PROPERTIES Location="CATALOG" ToolType="EXPLORE" Catalog="SASHELP.HPDM.EXPLORE.SOURCE" MaxLevels="32" WinsorStat="N" TrimmedStat="N" Cutoff="5" Quantiles="N" ForceRun="N" RunAction="Train" Component="HPDMExplore" SummaryStat="Y">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMExplore" ID="HPExpl" X="173" Y="150" DESCRIPTION="HP Explore" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPExpl">
+<PROPERTIES Location="CATALOG" ToolType="EXPLORE" Catalog="SASHELP.HPDM.Explore.SOURCE" MaxLevels="32" WinsorStat="N" TrimmedStat="N" Cutoff="5" Quantiles="N" ForceRun="N" RunAction="Train" Component="HPDMExplore" SummaryStat="Y">
 <VariableProperties/>
-<EmVariableAttributes/>
 <EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
@@ -31,13 +29,13 @@
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMExplore" ID="HPExpl2" X="316" Y="151" DESCRIPTION="HP Explore (2)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPExpl">
-<PROPERTIES Location="CATALOG" ToolType="EXPLORE" Catalog="SASHELP.HPDM.EXPLORE.SOURCE" MaxLevels="32" WinsorStat="N" TrimmedStat="N" Cutoff="5" Quantiles="N" ForceRun="N" RunAction="Train" Component="HPDMExplore" SummaryStat="Y">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMExplore" ID="HPExpl2" X="322" Y="151" DESCRIPTION="HP Explore (2)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPExpl">
+<PROPERTIES Location="CATALOG" ToolType="EXPLORE" Catalog="SASHELP.HPDM.Explore.SOURCE" MaxLevels="32" WinsorStat="N" TrimmedStat="N" Cutoff="5" Quantiles="N" ForceRun="N" RunAction="Train" Component="HPDMExplore" SummaryStat="Y">
 <VariableProperties/>
+<EmTargetAttributes/>
 <EmVariableAttributes>
 <DELTA Variable="control_number" AttributeName="ROLE" AttributeValue="REJECTED"/>
 </EmVariableAttributes>
-<EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
 <Data/>
@@ -48,10 +46,9 @@
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMImpute" ID="HPImp" X="754" Y="75" DESCRIPTION="HP Impute" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TRANSFORM" TOOLPREFIX="HPImp">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMImpute" ID="HPImp" X="760" Y="75" DESCRIPTION="HP Impute" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="TRANSFORM" TOOLPREFIX="HPImp">
 <PROPERTIES Location="CATALOG" ToolType="TRANSFORM" Catalog="SASHELP.HPDM.IMPUTE.SOURCE" MethodInterval="MEAN" MethodClass="COUNT" IntervalStat="DATA" Cutoff="5" MethodTargetInterval="NONE" MethodTargetClass="NONE" Indicator="NONE" IndicatorSource="IMPUTED" IndicatorRole="REJECTED" ValidateTestMissing="N" DistributionMissing="N" ImputeNoMissing="N" HideVariable="Y" RandomSeed="12345" MaxPctMissing="50.0" DefaultNum="." RejectMissingVar="Y" ForceRun="N" RunAction="Train" Component="HPDMImpute" Normalize="Y" DefaultChar="">
 <VariableProperties/>
-<EmVariableAttributes/>
 <EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
@@ -63,10 +60,9 @@
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMPartition" ID="HPPart" X="463" Y="93" DESCRIPTION="HP Data Partition" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="HPDM" TOOLPREFIX="HPPart">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMPartition" ID="HPPart" X="469" Y="93" DESCRIPTION="HP Data Partition" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="HPDM" TOOLPREFIX="HPPart">
 <PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.PARTITION.SOURCE" Method="DEFAULT" TrainPct="70" ValidatePct="30" RandomSeed="12345" ForceRun="N" RunAction="Train" Component="HPDMPartition">
 <VariableProperties/>
-<EmVariableAttributes/>
 <EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
@@ -78,10 +74,9 @@
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMReg" ID="HPReg" X="896" Y="73" DESCRIPTION="HP Regression" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPReg">
-<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPREG.SOURCE" MainEffect="Y" TwoFactor="N" Polynomial="N" PolynomialDegree="2" SuppressIntercept="N" MISSASLVL="N" Error="LOGISTIC" LinkFunction="LOGIT" SelectMethod="STEPWISE" SelectCriterion="SBC" StopCriterion="SBC" SLEntry="0.05" SLStay="0.05" MaxEffects="0" MinEffects="0" Hierarchy="NONE" MaxSteps="0" SuppressOutput="N" ABSCONV="." ABSFCONV="." ABSGCONV="." FCONV="." GCONV="." TECH="NRRIDG" MAXITER="." MAXFUNC="." MAXTIME="." MINITER="." NORMALIZE="Y" EXCLUDEDVARIABLE="REJECT" ForceRun="N" RunAction="Train" Component="HPDMReg" NCPU="Actual" NNode="0" NThreads="Default" Host="Local" Timeout="120" LogDetails="N" Term="Y" Interactions="" SelectUseDefault="Y">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMReg" ID="HPReg" X="902" Y="73" DESCRIPTION="HP Regression" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPReg">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPReg.SOURCE" MainEffect="Y" TwoFactor="N" Polynomial="N" PolynomialDegree="2" SuppressIntercept="N" MISSASLVL="N" Error="LOGISTIC" LinkFunction="LOGIT" SelectMethod="STEPWISE" SelectCriterion="SBC" StopCriterion="SBC" SLEntry="0.05" SLStay="0.05" MaxEffects="0" MinEffects="0" Hierarchy="NONE" MaxSteps="0" SuppressOutput="N" ABSCONV="." ABSFCONV="." ABSGCONV="." FCONV="." GCONV="." TECH="NRRIDG" MAXITER="." MAXFUNC="." MAXTIME="." MINITER="." NORMALIZE="Y" EXCLUDEDVARIABLE="REJECT" ForceRun="N" RunAction="Train" Component="HPDMReg" NCPU="Actual" NNode="0" NThreads="Default" Host="Local" Timeout="120" LogDetails="N" Term="Y" Interactions="" SelectUseDefault="Y">
 <VariableProperties/>
-<EmVariableAttributes/>
 <EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
@@ -93,10 +88,9 @@
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMTransform" ID="HPTrans" X="168" Y="92" DESCRIPTION="HP Transform" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPTrans">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMTransform" ID="HPTrans" X="174" Y="92" DESCRIPTION="HP Transform" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPTrans">
 <PROPERTIES Location="CATALOG" ToolType="EXPLORE" Catalog="SASHELP.HPDM.TRANSFORM.SOURCE" DefaultMethod="NONE" DefaultTargetMethod="NONE" NumberofBins="VARIABLES" MissingValue="SEPARATE" HideVariable="Y" SummaryStatistics="N" RejectVariable="Y" ForceRun="N" RunAction="Train" Component="HPDMTransform" SummaryVariables="TRANSFORMED" Offset="1" MinOffset="Y">
 <VariableProperties/>
-<EmVariableAttributes/>
 <EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
@@ -106,6 +100,7 @@
 <Data><![CDATA[
 new_donor_age = donor_age;
 if donor_age = 0 then new_donor_age = .;
+ 
 ]]>
 </Data>
 </EDITORCODE>
@@ -115,15 +110,15 @@ if donor_age = 0 then new_donor_age = .;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMTransform" ID="HPTrans2" X="611" Y="74" DESCRIPTION="HP Transform (2)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPTrans">
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMTransform" ID="HPTrans2" X="617" Y="74" DESCRIPTION="HP Transform (2)" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="HPTrans">
 <PROPERTIES Location="CATALOG" ToolType="EXPLORE" Catalog="SASHELP.HPDM.TRANSFORM.SOURCE" DefaultMethod="NONE" DefaultTargetMethod="NONE" NumberofBins="VARIABLES" MissingValue="SEPARATE" HideVariable="Y" SummaryStatistics="N" RejectVariable="Y" ForceRun="N" RunAction="Train" Component="HPDMTransform" SummaryVariables="TRANSFORMED" Offset="1" MinOffset="Y">
 <VariableProperties/>
+<EmTargetAttributes/>
 <EmVariableAttributes>
 <DELTA Variable="file_card_gift" AttributeName="METHOD" AttributeValue="LOG"/>
 <DELTA Variable="lifetime_gift_count" AttributeName="METHOD" AttributeValue="LOG"/>
 <DELTA Variable="median_home_value" AttributeName="METHOD" AttributeValue="LOG"/>
 </EmVariableAttributes>
-<EmTargetAttributes/>
 <EmFileProperties>
 <USERTRAINCODE Type="EXTERNAL" Extension="sas">
 <Data/>
@@ -134,8 +129,8 @@ if donor_age = 0 then new_donor_age = .;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="20" Y="121" DESCRIPTION="DONOR_RAW_DATA" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
-<PROPERTIES DataSource="donorrawdata" Scope="LOCAL" Role="RAW" Library="GRIDLIB" Table="DONOR_RAW_DATA" NCols="50" NObs="19372" NBytes="." Segment="" DataSourceRole="RAW" OutputType="VIEW" ForceRun="N" ComputeStatistics="N" DataSelection="DATASOURCE" NewTable="" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" ApplyMaxClassLevels="Y" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" DropMapVariables="Y" DsId="donorrawdata" DsSampleName="EMDS.donorrawdata_SM" DsSampleSizeType="ROWS" DsSampleSize="10000" DsCreatedBy="ramyne" DsCreateDate="1758197518.8" DsModifiedBy="ramyne" DsModifyDate="1758197518.9" DsScope="LOCAL" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" RunAction="Train" Component="DataSource" Description="">
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="26" Y="121" DESCRIPTION="DONOR_RAW_DATA" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<PROPERTIES DataSource="donorrawdata" Scope="LOCAL" Role="RAW" Library="GPLIB" Table="DONOR_RAW_DATA" NCols="50" NObs="19372" NBytes="." Segment="" DataSourceRole="RAW" OutputType="VIEW" ForceRun="N" ComputeStatistics="N" DataSelection="DATASOURCE" NewTable="" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" ApplyMaxClassLevels="Y" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" DropMapVariables="Y" DsId="donorrawdata" DsSampleName="EMDS.donorrawdata_SM" DsSampleSizeType="ROWS" DsSampleSize="10000" DsCreatedBy="ramyne" DsCreateDate="1771271728.9" DsModifiedBy="ramyne" DsModifyDate="1771271728.9" DsScope="LOCAL" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" RunAction="Train" Component="DataSource" Description="">
 <VariableProperties/>
 <EmVariableAttributes>
 <DELTA Variable="card_prom_12" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
@@ -158,7 +153,7 @@ if donor_age = 0 then new_donor_age = .;
 </EmVariableAttributes>
 <EmTargetAttributes>
 <target_b>
-<DecData Table="EMWS1.Ids_target_b_DD">
+<DecData Table="EMWS2.Ids_target_b_DD">
 <Data>
 <Obs TARGET_B="1" COUNT="4843" DATAPRIOR="0.25" TRAINPRIOR="0.25" DECPRIOR="." DECISION1="1" DECISION2="0"/>
 <Obs TARGET_B="0" COUNT="14529" DATAPRIOR="0.75" TRAINPRIOR="0.75" DECPRIOR="." DECISION1="0" DECISION2="1"/>
@@ -173,7 +168,7 @@ if donor_age = 0 then new_donor_age = .;
 <Variable NAME="DECISION2" LABEL="0" LENGTH="8" FORMAT="" TYPE="N"/>
 </Metadata>
 </DecData>
-<DecMeta Table="EMWS1.Ids_target_b_DM">
+<DecMeta Table="EMWS2.Ids_target_b_DM">
 <Data>
 <Obs _TYPE_="MATRIX" VARIABLE="" LABEL="" LEVEL="PROFIT" EVENT="" ORDER="" FORMAT="" TYPE="" COST="" USE="N"/>
 <Obs _TYPE_="TARGET" VARIABLE="target_b" LABEL="target_b" LEVEL="BINARY" EVENT="1" ORDER="" FORMAT="" TYPE="N" COST="" USE=""/>
@@ -211,10 +206,9 @@ if donor_age = 0 then new_donor_age = .;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMASSMT.ASSESS.CLASS" COMPONENT="ModelCompare" ID="MdlComp" X="1038" Y="127" DESCRIPTION="Model Comparison" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="MdlComp">
-<PROPERTIES NumberOfReportedLevels="1E-6" NormalizeReportingVariables="Y" DecileBin="20" LiftEpsilon="1E-6" ProfitEpsilon="1E-6" RoiEpsilon="1E-6" ScoreDistBin="20" RocChart="Y" RocEpsilon="0.01" AssessAllTargetLevels="N" SelectionData="DEFAULT" HPCriteria="DEFAULT" SelectionTable="VALIDATE" SelectionCriteria="_AUR_" SelectionDepth="10" NumberofBins="20" RecomputeAssess="N" TargetName="target_b" ModelId="HPReg" ModelDescription="HP Regression" ModelCriteria="Valid: Kolmogorov-Smirnov (KS)" ForceRun="N" RunAction="Train" Component="ModelCompare" StatisticUsed="VKS" TargetLabel="target_b">
+<NODE CLASS="SASHELP.EMASSMT.ASSESS.CLASS" COMPONENT="ModelCompare" ID="MdlComp" X="1044" Y="127" DESCRIPTION="Model Comparison" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="MdlComp">
+<PROPERTIES NumberOfReportedLevels="1E-6" NormalizeReportingVariables="Y" DecileBin="20" LiftEpsilon="1E-6" ProfitEpsilon="1E-6" RoiEpsilon="1E-6" ScoreDistBin="20" RocChart="Y" RocEpsilon="0.01" AssessAllTargetLevels="N" SelectionData="DEFAULT" HPCriteria="_MISC_" SelectionTable="VALIDATE" SelectionCriteria="DEFAULT" SelectionDepth="10" NumberofBins="20" RecomputeAssess="N" TargetName="target_b" ModelId="HPReg" ModelDescription="HP Regression" ModelCriteria="Valid: Kolmogorov-Smirnov (KS)" ForceRun="N" RunAction="Train" Component="ModelCompare" StatisticUsed="VKS" TargetLabel="target_b">
 <VariableProperties/>
-<EmVariableAttributes/>
 <EmTargetAttributes/>
 <EmFileProperties>
 <EMNOTES Type="EXTERNAL" Extension="txt">
@@ -223,9 +217,10 @@ if donor_age = 0 then new_donor_age = .;
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
-<NODE CLASS="SASHELP.EMUTIL.EMMETADATA.CLASS" COMPONENT="Metadata" ID="Meta" X="317" Y="93" DESCRIPTION="Metadata" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="Meta">
+<NODE CLASS="SASHELP.EMUTIL.EMMETADATA.CLASS" COMPONENT="Metadata" ID="Meta" X="323" Y="93" DESCRIPTION="Metadata" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="Meta">
 <PROPERTIES HideRejected="N" AdvancedAdvisor="N" CombineRule="NONE" ComputeStatistics="N" ForceRun="N" RunAction="Train" Component="Metadata">
 <VariableProperties/>
+<EmTargetAttributes/>
 <EmVariableAttributes>
 <DELTA Variable="card_prom_12" AttributeName="HIDDEN" AttributeValue="N"/>
 <DELTA Variable="cluster_code" AttributeName="HIDDEN" AttributeValue="N"/>
@@ -280,8 +275,30 @@ if donor_age = 0 then new_donor_age = .;
 <DELTA Variable="urbanicity" AttributeName="HIDDEN" AttributeValue="N"/>
 <DELTA Variable="wealth_rating" AttributeName="HIDDEN" AttributeValue="N"/>
 </EmVariableAttributes>
-<EmTargetAttributes/>
 <EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+<METACODE_DATA Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+*------------------------------------------------------------*;
+* Metadata Changes;
+*------------------------------------------------------------*;
+if upcase(NAME) = &quot;DONOR_AGE&quot; then ROLE=&quot;REJECTED&quot;;
+ 
+]]>
+</Data>
+</METACODE_DATA>
+<VARIABLEPROPERTIES_DATA Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+*------------------------------------------------------------*;
+* Variable Attributes for DATA;
+*------------------------------------------------------------*;
+if upcase(NAME) = &quot;DONOR_AGE&quot; then NEWROLE=&quot;REJECTED&quot;;
+ 
+]]>
+</Data>
+</VARIABLEPROPERTIES_DATA>
 <IMPORTSET Type="DATA">
 <Data>
 <Obs USE="Y" PORT="DATA" NODELABEL="HPTrans" NODEPORT="TRAIN" LIBNAME="" DATASET="HPTrans_TRAIN" ROLE="TRAIN" MODTIME="1758197661.8" COLUMNMETA="HPTrans_CMeta_TRAIN" COLUMNMETAMODTIME="1758197662.2" EMINFO="Ids_EMINFO" EMINFOMODTIME="1758197576.5" NOBS="-1" DATASOURCE="donorrawdata"/>
@@ -318,27 +335,6 @@ if donor_age = 0 then new_donor_age = .;
 <Variable NAME="DATASOURCE" LABEL="" LENGTH="29" FORMAT="" TYPE="C"/>
 </Metadata>
 </IMPORTSET>
-<VARIABLEPROPERTIES_DATA Type="EXTERNAL" Extension="sas">
-<Data><![CDATA[
-*------------------------------------------------------------*;
-* Variable Attributes for DATA;
-*------------------------------------------------------------*;
-if upcase(NAME) = &quot;DONOR_AGE&quot; then NEWROLE=&quot;REJECTED&quot;;
-]]>
-</Data>
-</VARIABLEPROPERTIES_DATA>
-<METACODE_DATA Type="EXTERNAL" Extension="sas">
-<Data><![CDATA[
-*------------------------------------------------------------*;
-* Metadata Changes;
-*------------------------------------------------------------*;
-if upcase(NAME) = &quot;DONOR_AGE&quot; then ROLE=&quot;REJECTED&quot;;
-]]>
-</Data>
-</METACODE_DATA>
-<EMNOTES Type="EXTERNAL" Extension="txt">
-<Data/>
-</EMNOTES>
 </EmFileProperties>
 </PROPERTIES>
 </NODE>
@@ -358,6 +354,7 @@ if upcase(NAME) = &quot;DONOR_AGE&quot; then ROLE=&quot;REJECTED&quot;;
 </CONNECTIONS>
 <NOTES>
 <DATA><![CDATA[
+
 
 ]]>
 </DATA>
