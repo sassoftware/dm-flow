@@ -4,7 +4,11 @@
 
 ![alt text](../README_imgs/PredictiveModeling.png "Predictive Modeling")
 
+###### Goal:
 The goal is to create a model to predict which home loans will be bad loans (that is, will be defaulted on).
+
+###### Files:
+PredictiveModeling.xml, PredictiveModeling.pdf
 
 ***
 
@@ -12,11 +16,15 @@ The goal is to create a model to predict which home loans will be bad loans (tha
 
 ![alt text](../README_imgs/HPPredictiveModeling.png "HP Predictive Modeling")
 
+###### Goal:
 The goal is to create a model for a binary target that predicts which home loans are likely to be defaulted. This flow 
 uses high-performance nodes in SAS Enterprise Miner. If you set up a grid environment, the high-performance nodes run in a 
 distributed computing environment, enabling you to use a large number of observations and variables to train and assess a 
 predictive in a shorter period of time. These high-performance nodes are built on multithreaded procedures, so you might see 
 performance gain even when you run these nodes on single-machine mode.
+
+###### Files:
+HPPredictiveModeling.xml, HPPredictiveModeling.pdf
 
 ***
 
@@ -24,7 +32,11 @@ performance gain even when you run these nodes on single-machine mode.
 
 ![alt text](../README_imgs/HPPredictiveModelingTip.png "HP Predictive Modeling Tip")
 
-Read about this example on SAS communities site at <https://communities.sas.com/t5/SAS-Communities-Library/SAS-High-Performance-Analytics-tip-3-Example-flow-diagram-in-SAS/ta-p/248960>
+###### Goal:
+Read about this example on SAS communities site at: <https://communities.sas.com/t5/SAS-Communities-Library/SAS-High-Performance-Analytics-tip-3-Example-flow-diagram-in-SAS/ta-p/248960>
+
+###### Files:
+HPPredictiveModelingTip.xml, HPPredictiveModelingTip.pdf
 
 ***
 

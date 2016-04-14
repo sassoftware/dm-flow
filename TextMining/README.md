@@ -4,7 +4,11 @@
 
 ![alt text](../README_imgs/TextMiningExplore.png "Text Mining Explore")
 
+###### Goal:
 The goal is to use SAS Enterprise Miner text mining nodes to explore text data.
+
+###### Files:
+TextMiningExplore.xml, TextMiningExplore.pdf
 
 ***
 
@@ -12,7 +16,11 @@ The goal is to use SAS Enterprise Miner text mining nodes to explore text data.
 
 ![alt text](../README_imgs/TextMiningClassify.png "Text Mining Classify")
 
+###### Goal:
 The goal is to classify textual articles by the article’s content.
+
+###### Files:
+TextMiningClassify.xml, TextMiningClassify.pdf
 
 ***
 

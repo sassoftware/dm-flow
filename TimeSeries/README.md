@@ -4,8 +4,12 @@
 
 ![alt text](../README_imgs/TimeSeriesExplore.png "Time Series Explore")
 
+###### Goal:
 The goal is to explore a time series data set and organize it into a format for further analysis that compares 
 different time series in the data.
+
+###### Files:
+TimeSeriesExplore.xml, TimeSeriesExplore.pdf
 
 ***
 
