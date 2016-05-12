@@ -42,7 +42,7 @@ and associated PDF documentation.
 
 To run these examples:
 
-1. Create a new Project in SAS Enterprise Miner. 
+1. Create a new Project or open an existing project in SAS Enterprise Miner. 
 
 2. Right-click on the Diagrams folder in the top left corner, and select "Import Diagram from XML." Select the 
 XML file from one of the directories, and open the corresponding PDF document to learn about the technique 
