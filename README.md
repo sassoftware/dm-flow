@@ -19,7 +19,7 @@ limitations under the License.
 This repository contains example diagrams and materials for using SAS Enterprise Miner to perform data mining.
 
 The repository includes XML files (which represent SAS Enterprise Miner process flow diagrams) for association analysis, 
-clustering, credit scoring, predictive modeling, survival analysis, text mining, time series, and accompanying PDF files 
+clustering, credit scoring, ensemble modeling, predictive modeling, survival analysis, text mining, time series, and accompanying PDF files 
 to help guide you through the process flow diagrams.
 
 ##### These examples were tested in the following environment:
