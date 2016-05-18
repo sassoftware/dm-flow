@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?><_ROOT_ EMVERSION="13.2" ORIENTATION="HORIZONTAL">
+<Workspace>
+<NODES>
+<NODE CLASS="SASHELP.EMUTIL.CONTROLPOINT.CLASS" COMPONENT="ControlPoint" ID="CNTRL" X="736" Y="412" DESCRIPTION="Control Point (2)" DIAGRAMID="_ROOT_" PARENTID="">
+<PROPERTIES/>
+</NODE>
+<NODE CLASS="SASHELP.EMUTIL.CONTROLPOINT.CLASS" COMPONENT="ControlPoint" ID="CNTRL2" X="731" Y="105" DESCRIPTION="Control Point- Stacked Models" DIAGRAMID="_ROOT_" PARENTID="">
+<PROPERTIES/>
+</NODE>
+<NODE CLASS="SASHELP.EMUTIL.CONTROLPOINT.CLASS" COMPONENT="ControlPoint" ID="CNTRL3" X="94" Y="258" DESCRIPTION="Control Point" DIAGRAMID="_ROOT_" PARENTID="">
+<PROPERTIES/>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE" X="402" Y="258" DESCRIPTION="Simple Average Ensemble" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="MODEL" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode" NeedRun="N">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes>
+<DELTA Variable="DEBTINC" AttributeName="REPORT" AttributeValue="Y"/>
+</EmVariableAttributes>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+ 
+/*ULTIMATE*/
+ 
+%macro _simpleaverage(_partition,_outputdata);
+ 
+/*Retrieve the Node Id for the Model Comparison node */
+data _NULL_;
+set &amp;EM_LIB..em_dgraph;
+where TO=&quot;&amp;EM_NODEID&quot;;
+	call symput('_NODEID',strip(FROM));
+run;
+ 
+/*Retrieve the event and non-event of the target*/
+data _NULL_;
+set &amp;EM_DEC_DECMETA;
+	if _type_=&quot;TARGET&quot; then do;
+		call symput('_TARGET',strip(VARIABLE));
+		call symput('_EVENT',strip(EVENT));
+	end;
+	if _type_=&quot;PREDICTED&quot; then do;
+		if level=symget('_EVENT') then call symput('_TARGETEVENT',strip(tranwrd(VARIABLE,&quot;P_&quot;,&quot;&quot;)));
+			else call symput('_TARGETNONEVENT',strip(tranwrd(VARIABLE,&quot;P_&quot;,&quot;&quot;)));
+	end;
+run;
+ 
+/* order the models according to the misclassification rate of the validation set */
+proc sort data=&amp;EM_LIB..&amp;_nodeid._emreportfit out=_validation(keep=model fitstat train validate test);
+where fitstat=&quot;_MISC_&quot;;
+by test;
+run;
+ 
+data _null_;
+set _validation end=eof;
+    call symput('_model'!!strip(put(_N_, BEST.))  , strip(model));
+    call symput('_fitstat'!!strip(put(_N_, BEST.)), strip(validate));
+    if eof then call symput('_num_model', strip(put(_N_, BEST.)));
+run;
+ 
+/* transpose the posterior probabilities of the models and caculate the simple average */
+data &amp;_outputdata;
+length I_&amp;_TARGET $8;
+merge
+ %do i=1 %to &amp;_num_model;
+                &amp;EM_LIB..&amp;&amp;_model&amp;i.._&amp;_partition(keep=_dataobs_ P_&amp;_TARGETEVENT &amp;_TARGET
+																		rename=(P_&amp;_TARGETEVENT=_p_&amp;&amp;_model&amp;i))
+ %end;   end=eof ;
+label
+ %do i=1 %to &amp;_num_model;
+                _p_&amp;&amp;_model&amp;i=&quot;_p_&amp;&amp;_model&amp;i&quot;
+ %end;           ;
+by _dataobs_;
+P_&amp;_TARGETEVENT=mean(of _p_:);
+P_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETEVENT;
+ 
+R_&amp;_TARGETEVENT=1-P_&amp;_TARGETEVENT;
+R_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETNONEVENT;
+ 
+F_&amp;_TARGET=upcase(strip(&amp;_TARGET));
+if (P_&amp;_TARGETEVENT gt 0.5) then I_&amp;_TARGET=upcase(&quot;&amp;_EVENT&quot;);
+	else I_&amp;_TARGET=upcase(%quote(strip(tranwrd(&quot;&amp;_TARGETNONEVENT&quot;,&quot;&amp;_TARGET&quot;,&quot;&quot;))));
+run;
+ 
+%mend;
+ 
+/*create a simple average ensemble for all partitions: train, validate, and test*/
+%_simpleaverage(_partition=train   ,_outputdata=&amp;EM_EXPORT_TRAIN);
+%_simpleaverage(_partition=validate,_outputdata=&amp;EM_EXPORT_VALIDATE);
+%_simpleaverage(_partition=test    ,_outputdata=&amp;EM_EXPORT_TEST);
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE2" X="735" Y="343" DESCRIPTION="Hill Climbing Ensemble" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="MODEL" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode" NeedRun="N">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+options mprint;
+ 
+/*Retrieve the event and non-event of the target*/
+data _NULL_;
+set &amp;EM_DEC_DECMETA;
+	if _type_=&quot;TARGET&quot; then do;
+		call symput('_TARGET',strip(VARIABLE));
+		call symput('_EVENT',strip(EVENT));
+	end;
+	if _type_=&quot;PREDICTED&quot; then do;
+		if level=symget('_EVENT') then call symput('_TARGETEVENT',strip(tranwrd(VARIABLE,&quot;P_&quot;,&quot;&quot;)));
+			else call symput('_TARGETNONEVENT',strip(tranwrd(VARIABLE,&quot;P_&quot;,&quot;&quot;)));
+	end;
+run;
+ 
+/*Retrieve the Node Ids of the Model Comparison and the Simple Average node */
+data _NULL_;
+set &amp;EM_LIB..em_dgraph;
+if TO=&quot;&amp;EM_NODEID&quot; then call symput('_SAVGID',strip(FROM));
+run;
+data _NULL_;
+set &amp;EM_LIB..em_dgraph;
+if TO=&quot;&amp;_SAVGID&quot; then call symput('_NODEID',strip(FROM));
+run;
+ 
+/*Create arrays for models*/
+proc sort data=&amp;EM_LIB..&amp;_nodeid._emreportfit out=_validation(keep=model fitstat train validate test);
+where fitstat=&quot;_MISC_&quot;;
+by validate;
+run;
+ 
+data _null_;
+set _validation end=eof;
+    call symput('_model'!!strip(put(_N_, BEST.)), strip(model));
+	if eof then call symput('_num_model', strip(put(_N_, BEST.)));
+run;
+ 
+data modelorder(keep=model misc_test);
+model=1;
+set _validation(keep=test rename=(test=misc_test));
+if _n_=1;
+run;
+ 
+/*calculate probability of event as a simple average*/
+%macro _calculate_SA_prob_event(_partition,_whereclause=&quot;&quot;,_outputtable=initialtable,_additionalcalc=);
+	data _null_;
+	set modelorder&amp;_whereclause end=eof;
+	call symput('_nsequence'!!strip(put(_N_, BEST.)), strip(model));
+	if eof then call symput('_niterations', strip(put(_N_, BEST.)));
+	run;
+ 
+	data &amp;_outputtable;
+	length I_&amp;_TARGET $8;
+		merge
+	%do j=1 %to &amp;_niterations;
+		&amp;EM_LIB..&amp;_SAVGID._&amp;_partition(keep=_dataobs_ &amp;_TARGET _p_&amp;&amp;&amp;&amp;_model&amp;&amp;_nsequence&amp;j)
+	%end;	end=eof;
+	by _dataobs_;
+ 
+	pacum=mean(of _p:);
+ 
+%put additionalcacl is &amp;_additionalcalc;
+	%if &quot;&amp;_additionalcalc&quot;=&quot;Y&quot; %then %do;
+	%_calculate_p_r_f_i(_TARGETEVENT=&amp;_TARGETEVENT,_TARGETNONEVENT=&amp;_TARGETNONEVENT,_TARGET=&amp;_TARGET,_EVENT=&amp;_EVENT);
+	%end;
+	%else %do;
+	keep _dataobs_ _pacum;
+	rename pacum=_pacum;
+	%end;
+ 
+	run;
+ 
+%mend;
+ 
+/*calculate probabilities residuals from into variables*/
+%macro _calculate_p_r_f_i(_TARGETEVENT,_TARGETNONEVENT,_TARGET,_EVENT);
+	P_&amp;_TARGETEVENT=mean(of _p:);
+	P_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETEVENT;
+	
+	R_&amp;_TARGETEVENT=1-P_&amp;_TARGETEVENT;
+	R_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETNONEVENT;
+	
+	F_&amp;_TARGET=upcase(strip(&amp;_TARGET));
+ 
+	if (P_&amp;_TARGETEVENT gt 0.5) then I_&amp;_TARGET=upcase(&quot;&amp;_EVENT&quot;);
+		else I_&amp;_TARGET=upcase(%quote(strip(tranwrd(&quot;&amp;_TARGETNONEVENT&quot;,&quot;&amp;_TARGET&quot;,&quot;&quot;))));
+%mend;
+ 
+ 
+%macro hillclimbing(_partition,_modelorder);
+ 
+	%_calculate_SA_prob_event(_partition=&amp;_partition);
+ 
+%do i=1 %to &amp;_num_model;
+	data _temp&amp;i;
+	length I_&amp;_TARGET $8;
+		merge initialtable
+              &amp;EM_LIB..&amp;&amp;_model&amp;i.._&amp;_partition(keep=_dataobs_ P_&amp;_TARGETEVENT &amp;_TARGET
+																		rename=(P_&amp;_TARGETEVENT=_p_&amp;&amp;_model&amp;i))
+	end=eof;
+	by _dataobs_;
+ 
+	%_calculate_p_r_f_i(_TARGETEVENT=&amp;_TARGETEVENT,_TARGETNONEVENT=&amp;_TARGETNONEVENT,_TARGET=&amp;_TARGET,_EVENT=&amp;_EVENT);
+ 
+	if F_&amp;_TARGET eq I_&amp;_TARGET then corr_class=1;
+			else corr_class=0;
+		obscount+1;
+		corr_classcount+corr_class;
+		misc=(obscount-corr_classcount)/obscount;
+		if eof then call symput('_ensmisc'!!strip(put(&amp;i, BEST.)), strip(misc));
+ 
+	run;
+ 
+	data _ens&amp;i;
+	label ensid=&quot;ensemble id&quot;;
+	set _temp&amp;i end=eof;
+	if eof;
+		keep misc ensid;
+		ensid=&amp;i;
+	run;
+%end;
+ 
+data outtable;
+set %do k=1 %to &amp;_num_model; _ens&amp;k %end; ;
+rename misc=misc_&amp;_partition;
+run;
+ 
+proc sort data=outtable;
+by misc_&amp;_partition;
+run;
+ 
+data toappend;
+set outtable;
+by misc_&amp;_partition;
+if _n_=1;
+run;
+ 
+data &amp;_modelorder;
+set &amp;_modelorder toappend(rename=(ensid=model));
+run;
+ 
+%mend;
+ 
+%macro iteratehc;
+	%do _i=1 %to 30;
+	%hillclimbing(_partition=test,_modelorder=modelorder)
+	%end;
+%mend;
+ 
+%iteratehc
+ 
+data modelorder;
+set modelorder;
+step=_n_;
+run;
+ 
+proc sort data=modelorder out=stop_point;
+by misc_test step;
+run;
+ 
+data _null_;
+set stop_point;
+if _n_=1;
+call symput('_stoppoint', strip(step));
+run;
+ 
+%put stppoint is &amp;_stoppoint;
+ 
+%_calculate_SA_prob_event(_partition=train	,_whereclause=(where=(step le &amp;_stoppoint)),_outputtable=&amp;EM_EXPORT_TRAIN,_additionalcalc=Y);
+%_calculate_SA_prob_event(_partition=validate,_whereclause=(where=(step le &amp;_stoppoint)),_outputtable=&amp;EM_EXPORT_VALIDATE,_additionalcalc=Y);
+%_calculate_SA_prob_event(_partition=test		,_whereclause=(where=(step le &amp;_stoppoint)),_outputtable=&amp;EM_EXPORT_TEST,_additionalcalc=Y);
+ 
+ 
+ 
+ 
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE3" X="735" Y="286" DESCRIPTION="TopT Ensemble" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="MODEL" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode" NeedRun="N">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+options mprint nosymbolgen nomlogic;
+ 
+/*Retrieve the event and non-event of the target*/
+data _NULL_;
+set &amp;EM_DEC_DECMETA;
+	if _type_=&quot;TARGET&quot; then do;
+		call symput('_TARGET',strip(VARIABLE));
+		call symput('_EVENT',strip(EVENT));
+	end;
+	if _type_=&quot;PREDICTED&quot; then do;
+		if level=symget('_EVENT') then call symput('_TARGETEVENT',strip(tranwrd(VARIABLE,&quot;P_&quot;,&quot;&quot;)));
+			else call symput('_TARGETNONEVENT',strip(tranwrd(VARIABLE,&quot;P_&quot;,&quot;&quot;)));
+	end;
+run;
+ 
+/*Retrieve the Node Ids of the Model Comparison and the Simple Average node */
+data _NULL_;
+set &amp;EM_LIB..em_dgraph;
+if TO=&quot;&amp;EM_NODEID&quot; then call symput('_SAVGID',strip(FROM));
+run;
+data _NULL_;
+set &amp;EM_LIB..em_dgraph;
+if TO=&quot;&amp;_SAVGID&quot; then call symput('_NODEID',strip(FROM));
+run;
+ 
+/*Create arrays for models*/
+proc sort data=&amp;EM_LIB..&amp;_nodeid._emreportfit out=_validation(keep=model fitstat train validate test);
+where fitstat=&quot;_MISC_&quot;;
+by validate;
+run;
+ 
+data _null_;
+set _validation end=eof;
+    call symput('_model'!!strip(put(_N_, BEST.)), strip(model));
+	if eof then call symput('_num_model', strip(put(_N_, BEST.)));
+run;
+ 
+%macro toptensemble(_partition,_outtable);
+ 
+%do j=1 %to &amp;_num_model;
+/*	data _temp&amp;j; */
+	data _temp;
+	length I_&amp;_TARGET $8;
+	merge
+	%do i=1 %to &amp;j;
+		&amp;EM_LIB..&amp;_SAVGID._&amp;_partition(keep=_dataobs_ &amp;_TARGET _p_&amp;&amp;_model&amp;i)
+	%end;	end=eof;
+	by _dataobs_;
+ 
+	P_&amp;_TARGETEVENT=mean(of _p:);
+	P_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETEVENT;
+	
+	R_&amp;_TARGETEVENT=1-P_&amp;_TARGETEVENT;
+	R_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETNONEVENT;
+	
+	F_&amp;_TARGET=upcase(strip(&amp;_TARGET));
+ 
+	if (P_&amp;_TARGETEVENT gt 0.5) then I_&amp;_TARGET=upcase(&quot;&amp;_EVENT&quot;);
+		else I_&amp;_TARGET=upcase(%quote(strip(tranwrd(&quot;&amp;_TARGETNONEVENT&quot;,&quot;&amp;_TARGET&quot;,&quot;&quot;))));
+ 
+	
+	if F_&amp;_TARGET eq I_&amp;_TARGET then corr_class=1;
+			else corr_class=0;
+		obscount+1;
+		corr_classcount+corr_class;
+		misc=(obscount-corr_classcount)/obscount;
+		if eof then call symput('_ensmisc'!!strip(put(&amp;i, BEST.)), strip(misc));
+	run;
+ 
+	data _ens&amp;j;
+	label ensid=&quot;ensemble id&quot;;
+	set _temp end=eof;
+	if eof;
+		keep misc ensid;
+		ensid=&amp;j;
+	run;
+%end;
+ 
+data &amp;_outtable;
+set %do k=1 %to &amp;_num_model; _ens&amp;k %end; ;
+rename misc=misc_&amp;_partition;
+run;
+ 
+%mend;
+ 
+%toptensemble(_partition=test,    _outtable=modelorder)
+ 
+data modelorder;
+set modelorder;
+step=_n_;
+run;
+ 
+proc sort data=modelorder out=stop_point;
+by misc_test step;
+run;
+ 
+data _null_;
+set stop_point;
+if _n_=1;
+call symput('_stoppoint', strip(step));
+run;
+ 
+%macro calculateSAverage(_partition,_outtable);
+data &amp;_outtable;
+	length I_&amp;_TARGET $8;
+	merge
+	%do i=1 %to &amp;_stoppoint;
+		&amp;EM_LIB..&amp;_SAVGID._&amp;_partition(keep=_dataobs_ &amp;_TARGET _p_&amp;&amp;_model&amp;i)
+	%end;	end=eof;
+	by _dataobs_;
+ 
+	P_&amp;_TARGETEVENT=mean(of _p:);
+	P_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETEVENT;
+	
+	R_&amp;_TARGETEVENT=1-P_&amp;_TARGETEVENT;
+	R_&amp;_TARGETNONEVENT=1-P_&amp;_TARGETNONEVENT;
+	
+	F_&amp;_TARGET=upcase(strip(&amp;_TARGET));
+ 
+	if (P_&amp;_TARGETEVENT gt 0.5) then I_&amp;_TARGET=upcase(&quot;&amp;_EVENT&quot;);
+		else I_&amp;_TARGET=upcase(%quote(strip(tranwrd(&quot;&amp;_TARGETNONEVENT&quot;,&quot;&amp;_TARGET&quot;,&quot;&quot;))));
+ 
+run;
+%mend;
+ 
+%calculateSAverage(_partition=train		,_outtable=&amp;EM_EXPORT_TRAIN)
+%calculateSAverage(_partition=validate	,_outtable=&amp;EM_EXPORT_VALIDATE)
+%calculateSAverage(_partition=test		,_outtable=&amp;EM_EXPORT_TEST)
+ 
+ 
+ 
+ 
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE4" X="1215" Y="341" DESCRIPTION="Additional Assessment" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="MODEL" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+/*Retrieve the Node Id of the Model Comparison node */
+data _NULL_;
+	set &amp;EM_LIB..em_dgraph;
+	if TO=&quot;&amp;EM_NODEID&quot; then call symput('_NODEID',strip(FROM));
+run;
+ 
+/*Retrieve the event and non-event of the target*/
+data _NULL_;
+	set &amp;EM_DEC_DECMETA;
+	if _type_=&quot;TARGET&quot; then do;
+		call symput('_TARGET',strip(VARIABLE));
+		call symput('_EVENT',strip(EVENT));
+	end;
+	if _type_=&quot;PREDICTED&quot; then do;
+		if level=symget('_EVENT') then call symput('_TARGETEVENT',strip(tranwrd(VARIABLE,&quot;P_&quot;,&quot;&quot;)));
+	end;
+run;
+ 
+%let _workspaceid=&amp;EM_LIB;
+ 
+%macro CORRECT_EVT_FREQ_CALC;
+	proc sort data=&amp;_workspaceid..&amp;_nodeid._emreportfit out=_v(keep=model fitstat train validate test);
+		where fitstat=&quot;_MISC_&quot;;
+		by test;
+	run;
+ 
+	data _null_;
+		set _v end=eof;
+		call symput('_model'!!strip(put(_N_, BEST.)), strip(model));
+		call symput('_fitstat'!!strip(put(_N_, BEST.)), strip(test));
+		if eof then call symput('_num_model', strip(put(_N_, BEST.)));
+	run;
+ 
+	%do i=1 %to &amp;_num_model;
+		data _temp_test_&amp;&amp;_model&amp;i.;
+			set &amp;_workspaceid..&amp;&amp;_model&amp;i.._test(keep=_dataobs_ &amp;_target F_&amp;_TARGET I_&amp;_TARGET);
+			if F_&amp;_TARGET eq I_&amp;_TARGET then corr_class=1;
+			else corr_class=0; obscount+1; corr_classcount+corr_class;
+			misc=(obscount-corr_classcount)/obscount;
+		run;
+ 
+		proc tabulate data=_temp_test_&amp;&amp;_model&amp;i. out=_temp_test_N_&amp;&amp;_model&amp;i.;
+			class corr_class &amp;_TARGET;
+			table &amp;_TARGET,corr_class;
+		run;
+ 
+		proc sql;
+			create table classification_test_&amp;&amp;_model&amp;i.
+			/* need to use PUT function here when target is numeric, otherwise use UPCASE */
+			as select put(&amp;_TARGET,1.) as from,
+			(N/sum(N)) as percent,
+			&quot;&amp;&amp;_model&amp;i.&quot; length=10 as Model,
+			case
+				when (corr_class=1) then 'Correct'
+				when (corr_class=0) then 'Incorrect'
+			end as correcttext from _temp_test_N_&amp;&amp;_model&amp;i.;
+		quit;
+	%end;
+ 
+	data _classification_test_all_models;
+		set
+		%do i=1 %to &amp;_num_model;
+			classification_test_&amp;&amp;_model&amp;i.
+		%end; ;
+		label datarole='Data Role';
+		label percent='Total Percentage';
+		label from='Target';
+		datarole=&quot;TEST&quot;;
+		*ModelDescription='Ensemble';
+		percent=percent*100;
+	run;
+%mend;
+ 
+%CORRECT_EVT_FREQ_CALC;
+ 
+proc sql;
+	create table lookupmodel
+	as select distinct model, modeldescription from &amp;EM_LIB..&amp;_Nodeid._emclassification;
+quit;
+ 
+proc sort data=_classification_test_all_models;
+	by model;
+run;
+ 
+data _classification_test_all_models;
+	merge _classification_test_all_models lookupmodel;
+	by model;
+run;
+ 
+data emclassification;
+	set &amp;EM_LIB..&amp;_Nodeid._emclassification(keep=from percent modeldescription correcttext datarole) _classification_test_all_models(drop=model);
+run;
+ 
+%em_register(key=classification, type=DATA);
+ 
+proc sort data=emclassification out=&amp;em_user_classification;
+	by modeldescription;
+run;
+ 
+/*Generate Classification Chart*/
+%em_report(key=classification, viewtype=lattice, latticetype=bar, latticex=ModelDescription, latticey=datarole, x=from, group=correctText, freq=percent, description=%nrbquote(Classification Chart), autoDisplay=Y);
+ 
+/*Fit Stat Plots*/
+%em_register(key=fitstat, type=DATA);
+ 
+data correct_pred_evt_percent;
+	drop percent;
+	set &amp;em_user_classification(keep=modeldescription percent datarole from correctText);
+	where from=&quot;&amp;_EVENT&quot; and correctText=&quot;Correct&quot;; correct_pred_evt_percent=percent/100;
+run;
+ 
+data CEP_TRAIN CEP_VALIDATE CEP_TEST;
+	drop datarole;
+	set correct_pred_evt_percent;
+	if datarole=&quot;TRAIN&quot; then output CEP_TRAIN;
+	else if datarole=&quot;VALIDATE&quot; then output CEP_VALIDATE;
+	else output CEP_TEST;
+run;
+ 
+data CEP;
+	drop from correcttext;
+	merge CEP_TRAIN(rename=(correct_pred_evt_percent=_CEP_)) CEP_VALIDATE(rename=(correct_pred_evt_percent=_VCEP_)) CEP_TEST(rename=(correct_pred_evt_percent=_TCEP_));
+	by modeldescription;
+run;
+ 
+data fitstat;
+	set &amp;EM_LIB..&amp;_Nodeid._emoutfit(keep=modeldescription _ASE_ _AUR_ _MISC_ _VASE_ _VAUR_ _VMISC_ _TASE_ _TAUR_ _TMISC_);
+run;
+ 
+proc sort data=fitstat out=fitstat;
+	by modeldescription;
+run;
+ 
+data &amp;em_user_fitstat;
+	label _CEP_=&quot;TRAIN: Correctly Predicted Event Level Percentage&quot;;
+	label _VCEP_=&quot;VALIDATE: Correctly Predicted Event Level Percentage&quot;;
+	label _TCEP_=&quot;TEST: Correctly Predicted Event Level Percentage&quot;;
+	merge CEP fitstat;
+	by modeldescription;
+run;
+ 
+%em_report( key=fitstat, viewtype=Scatter, x=_ASE_, y=_AUR_, block=%bquote(Training Fit Statistics Scatter Plot), description=%bquote(Training Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_ASE_, y=_MISC_, block=%bquote(Training Fit Statistics Scatter Plot), description=%bquote(Training Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_AUR_, y=_MISC_, block=%bquote(Training Fit Statistics Scatter Plot), description=%bquote(Training Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_CEP_, y=_MISC_, block=%bquote(Training Fit Statistics Scatter Plot), description=%bquote(Training Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_VASE_, y=_VAUR_, block=%bquote(Validation Fit Statistics Scatter Plot), description=%bquote(Validation Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_VASE_, y=_VMISC_, block=%bquote(Validation Fit Statistics Scatter Plot), description=%bquote(Validation Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_VAUR_, y=_VMISC_, block=%bquote(Validation Fit Statistics Scatter Plot), description=%bquote(Validation Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_VCEP_, y=_MISC_, block=%bquote(Validation Fit Statistics Scatter Plot), description=%bquote(Validate Fit Statistics Scatter Plot), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_TASE_, y=_TAUR_, block=%bquote(Test Fit Statistics Scatter Plot), description=%bquote(Test ASE by Test AUC), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_TASE_, y=_TMISC_, block=%bquote(Test Fit Statistics Scatter Plot), description=%bquote(Test ASE y Test Misc), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_TAUR_, y=_TMISC_, block=%bquote(Test Fit Statistics Scatter Plot), description=%bquote(Test AUC by Test Misc), group=modeldescription, autodisplay=Y);
+%em_report( key=fitstat, viewtype=Scatter, x=_TCEP_, y=_MISC_, block=%bquote(Test Fit Statistics Scatter Plot), description=%bquote(Test CEP by Test Misc), group=modeldescription, autodisplay=Y);
+ 
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMForest" ID="HPDMForest" X="887" Y="216" DESCRIPTION="Stacked HP Forest" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPDMForest">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPDMForest.SOURCE" ToolType="MODEL" ALPHA="0.05" CATBINS="30" EXHAUSTIVE="5000" LEAFSIZEMETHOD="DEFAULT" LEAFFRACTION="0.00001" LEAFSIZE="1" MAXDEPTH="50" MAXTREES="100" MINCATSIZE="5" SEED="12345" SPLITSIZE="." NUMOBSMETHOD="PERCENTAGE" TRAINFRACTION="0.6" TRAINN="." VARS_TO_TRY="." MISSING="USEINSEARCH" MINUSEINSEARCH="1" VARSELECT="Y" VIMETHOD="LOSSREDUCTION" RBATOPNUM="25" RBACUT="0.01" ForceRun="N" RunAction="Train" Component="HPDMForest">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMNeural" ID="HPNNA" X="885" Y="170" DESCRIPTION="Stacked HPNeural" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPNNA">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPDMNeural.SOURCE" ToolType="MODEL" InputStd="RANGE" HIDDEN="3" HIDDENLAYERS="3" ARCHITECTURE="LAYER1" DIRECTCONN="N" TargetStd="RANGE" TargetActivation="IDENTITY" TargetError="NORMAL" OPTMETHOD="LBFGS" NUMTRIES="2" MAXITER="300" USEVALID="N" USEINVERSE="N" MISSASLVL="N" MAXLINKS="1000" ForceRun="N" RunAction="Train" Component="HPDMNeural" TableEditor="">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<HIDDENOPTIONS Type="DATA">
+<Data/>
+<Metadata/>
+</HIDDENOPTIONS>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMReg" ID="HPReg" X="885" Y="31" DESCRIPTION="Weighted Avg Ensemble" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPReg">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPReg.SOURCE" MainEffect="Y" TwoFactor="N" Polynomial="N" PolynomialDegree="2" SuppressIntercept="Y" MISSASLVL="N" Error="LOGISTIC" LinkFunction="LOGIT" SelectMethod="STEPWISE" SelectCriterion="DEFAULT" StopCriterion="DEFAULT" SLEntry="0.05" SLStay="0.05" MaxEffects="0" MinEffects="0" Hierarchy="NONE" MaxSteps="0" SuppressOutput="N" ABSCONV="." ABSFCONV="." ABSGCONV="." FCONV="." GCONV="." TECH="NRRIDG" MAXITER="." MAXFUNC="." MAXTIME="." MINITER="." NORMALIZE="Y" EXCLUDEDVARIABLE="REJECT" ForceRun="N" RunAction="Train" Component="HPDMReg" NCPU="Actual" NNode="0" NThreads="Default" Host="Local" Timeout="120" LogDetails="N" Term="Y" Interactions="" SelectUseDefault="Y">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="HPDMReg" ID="HPReg2" X="884" Y="77" DESCRIPTION="Weighted Avg Ensemble NoSel" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="HPReg">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.HPDM.HPReg.SOURCE" MainEffect="Y" TwoFactor="N" Polynomial="N" PolynomialDegree="2" SuppressIntercept="Y" MISSASLVL="N" Error="LOGISTIC" LinkFunction="LOGIT" SelectMethod="NONE" SelectCriterion="DEFAULT" StopCriterion="DEFAULT" SLEntry="0.05" SLStay="0.05" MaxEffects="0" MinEffects="0" Hierarchy="NONE" MaxSteps="0" SuppressOutput="N" ABSCONV="." ABSFCONV="." ABSGCONV="." FCONV="." GCONV="." TECH="NRRIDG" MAXITER="." MAXFUNC="." MAXTIME="." MINITER="." NORMALIZE="Y" EXCLUDEDVARIABLE="REJECT" ForceRun="N" RunAction="Train" Component="HPDMReg" NCPU="Actual" NNode="0" NThreads="Default" Host="Local" Timeout="120" LogDetails="N" Term="Y" Interactions="" SelectUseDefault="Y">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMASSMT.ASSESS.CLASS" COMPONENT="ModelCompare" ID="MdlComp" X="1058" Y="340" DESCRIPTION="Model Comparison 2" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="MdlComp">
+<PROPERTIES NumberOfReportedLevels="1E-6" NormalizeReportingVariables="Y" DecileBin="20" LiftEpsilon="1E-6" ProfitEpsilon="1E-6" RoiEpsilon="1E-6" ScoreDistBin="20" RocChart="Y" RocEpsilon="0.01" AssessAllTargetLevels="N" SelectionData="DEFAULT" HPCriteria="DEFAULT" SelectionTable="TEST" SelectionCriteria="_MISC_" SelectionDepth="10" NumberofBins="20" RecomputeAssess="N" TargetName="BAD" ModelId="HPNNA4" ModelDescription="Stacked HPNeural" ModelCriteria="Test: Misclassification Rate" ForceRun="N" RunAction="Train" Component="ModelCompare" StatisticUsed="_TMISC_" TargetLabel="">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes>
+<DELTA Variable="BAD" AttributeName="EVENT" AttributeValue="1"/>
+</EmVariableAttributes>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMASSMT.ASSESS.CLASS" COMPONENT="ModelCompare" ID="MdlComp2" X="256" Y="258" DESCRIPTION="Model Comparison" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="ASSESS" TOOLPREFIX="MdlComp">
+<PROPERTIES NumberOfReportedLevels="1E-6" NormalizeReportingVariables="Y" DecileBin="20" LiftEpsilon="1E-6" ProfitEpsilon="1E-6" RoiEpsilon="1E-6" ScoreDistBin="20" RocChart="Y" RocEpsilon="0.01" AssessAllTargetLevels="N" SelectionData="DEFAULT" HPCriteria="DEFAULT" SelectionTable="TEST" SelectionCriteria="_MISC_" SelectionDepth="10" NumberofBins="20" RecomputeAssess="N" TargetName="BAD" ModelId="Boost" ModelDescription="Gradient Boosting" ModelCriteria="Test: Misclassification Rate" ForceRun="N" RunAction="Train" Component="ModelCompare" StatisticUsed="_TMISC_" TargetLabel="">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMUTIL.EMMETADATA.CLASS" COMPONENT="Metadata" ID="Meta" X="571" Y="171" DESCRIPTION="Metadata" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="Meta">
+<PROPERTIES HideRejected="N" AdvancedAdvisor="N" CombineRule="NONE" ComputeStatistics="N" ForceRun="N" RunAction="Train" Component="Metadata">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes>
+<DELTA Variable="BAD" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="F_BAD" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="F_BAD" AttributeName="LABEL" AttributeValue=""/>
+<DELTA Variable="I_BAD" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="I_BAD" AttributeName="LABEL" AttributeValue=""/>
+<DELTA Variable="P_BAD0" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="P_BAD0" AttributeName="LABEL" AttributeValue=""/>
+<DELTA Variable="P_BAD1" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="P_BAD1" AttributeName="LABEL" AttributeValue=""/>
+<DELTA Variable="R_BAD0" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="R_BAD0" AttributeName="LABEL" AttributeValue=""/>
+<DELTA Variable="R_BAD1" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="R_BAD1" AttributeName="LABEL" AttributeValue=""/>
+<DELTA Variable="_dataobs_" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_Boost" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_Boost" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_HPDMForest" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_HPDMForest" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_HPNNA" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_HPNNA" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_HPNNA2" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_HPNNA2" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_HPNNA3" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_HPNNA3" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_HPSVM" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_HPSVM" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_HPTree" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_HPTree" AttributeName="HIDDEN" AttributeValue="N"/>
+<DELTA Variable="_p_HPTree2" AttributeName="NEWROLE" AttributeValue="INPUT"/>
+<DELTA Variable="_p_HPTree2" AttributeName="HIDDEN" AttributeValue="N"/>
+</EmVariableAttributes>
+<EmFileProperties>
+<IMPORTSET Type="DATA">
+<Data>
+<Obs USE="Y" PORT="DATA" NODELABEL="EMCODE" NODEPORT="TRAIN" LIBNAME="" DATASET="EMCODE_TRAIN" ROLE="TRAIN" MODTIME="1778668579.6" COLUMNMETA="EMCODE_CMeta_TRAIN" COLUMNMETAMODTIME="1778668581.4" EMINFO="EMCODE_EMINFO" EMINFOMODTIME="1778668581.5" NOBS="2382" DATASOURCE="homeequity"/>
+<Obs USE="Y" PORT="VALIDATE" NODELABEL="EMCODE" NODEPORT="VALIDATE" LIBNAME="" DATASET="EMCODE_VALIDATE" ROLE="VALIDATE" MODTIME="1778668580.2" COLUMNMETA="EMCODE_CMeta_TRAIN" COLUMNMETAMODTIME="1778668581.4" EMINFO="" EMINFOMODTIME="." NOBS="1788" DATASOURCE="homeequity"/>
+<Obs USE="Y" PORT="TEST" NODELABEL="EMCODE" NODEPORT="TEST" LIBNAME="" DATASET="EMCODE_TEST" ROLE="TEST" MODTIME="1778668580.7" COLUMNMETA="EMCODE_CMeta_TRAIN" COLUMNMETAMODTIME="1778668581.4" EMINFO="" EMINFOMODTIME="." NOBS="1790" DATASOURCE="homeequity"/>
+<Obs USE="Y" PORT="SCORE" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="TRANSACTION" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="DOCUMENT" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="CLUSMEAN" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="CLUSSTAT" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="ESTIMATE" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="RANK" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="REPORTFIT" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="RULES" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="SCOREDIST" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="TERMS" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="TREE" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+<Obs USE="Y" PORT="VARMAP" NODELABEL="" NODEPORT="" LIBNAME="" DATASET="" ROLE="" MODTIME="." COLUMNMETA="" COLUMNMETAMODTIME="." EMINFO="" EMINFOMODTIME="." NOBS="." DATASOURCE=""/>
+</Data>
+<Metadata>
+<Variable NAME="USE" LABEL="" LENGTH="1" FORMAT="" TYPE="C"/>
+<Variable NAME="PORT" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="NODELABEL" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="NODEPORT" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="LIBNAME" LABEL="" LENGTH="8" FORMAT="" TYPE="C"/>
+<Variable NAME="DATASET" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="ROLE" LABEL="" LENGTH="20" FORMAT="" TYPE="C"/>
+<Variable NAME="MODTIME" LABEL="" LENGTH="8" FORMAT="DATETIME20." TYPE="N"/>
+<Variable NAME="COLUMNMETA" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="COLUMNMETAMODTIME" LABEL="" LENGTH="8" FORMAT="DATETIME20." TYPE="N"/>
+<Variable NAME="EMINFO" LABEL="" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="EMINFOMODTIME" LABEL="" LENGTH="8" FORMAT="DATETIME20." TYPE="N"/>
+<Variable NAME="NOBS" LABEL="" LENGTH="8" FORMAT="" TYPE="N"/>
+<Variable NAME="DATASOURCE" LABEL="" LENGTH="29" FORMAT="" TYPE="C"/>
+</Metadata>
+</IMPORTSET>
+<VARIABLEPROPERTIES_DATA Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+*------------------------------------------------------------*;
+* Variable Attributes for DATA;
+*------------------------------------------------------------*;
+if upcase(NAME) = &quot;_P_BOOST&quot; then NEWROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPDMFOREST&quot; then NEWROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPNNA&quot; then NEWROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPNNA2&quot; then NEWROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPNNA3&quot; then NEWROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPSVM&quot; then NEWROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPTREE&quot; then NEWROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPTREE2&quot; then NEWROLE=&quot;INPUT&quot;;
+ 
+]]>
+</Data>
+</VARIABLEPROPERTIES_DATA>
+<METACODE_DATA Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+*------------------------------------------------------------*;
+* Metadata Changes;
+*------------------------------------------------------------*;
+if upcase(NAME) = &quot;_P_BOOST&quot; then ROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPDMFOREST&quot; then ROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPNNA&quot; then ROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPNNA2&quot; then ROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPNNA3&quot; then ROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPSVM&quot; then ROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPTREE&quot; then ROLE=&quot;INPUT&quot;;
+if upcase(NAME) = &quot;_P_HPTREE2&quot; then ROLE=&quot;INPUT&quot;;
+ 
+]]>
+</Data>
+</METACODE_DATA>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="DecisionTree" ID="Tree" X="885" Y="124" DESCRIPTION="Stacked Decision Tree" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODEL" TOOLPREFIX="Tree">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMMODL.TREE.SOURCE" ToolType="MODEL" TrainMode="BATCH" ImportModel="N" Freeze="N" UseMultipleTarget="N" Precision="4" IntervalCriterion="PROBF" NominalCriterion="PROBCHISQ" OrdinalCriterion="ENTROPY" SigLevel="0.2" Splitsize="." LeafSize="5" MinCatSize="5" Maxbranch="2" Maxdepth="6" Nrules="5" Nsurrs="0" MissingValue="USEINSEARCH" UseVarOnce="N" SplitPrecision="4" Subtree="ASSESSMENT" NSubtree="1" AssessMeasure="PROFIT/LOSS" AssessPercentage="0.25" NodeSample="20000" Exhaustive="5000" Kass="Y" KassApply="BEFORE" Depth="Y" Inputs="N" NumInputs="1" VarSelection="Y" Leafid="Y" NodeRole="SEGMENT" Performance="DISK" CV="N" CVNIter="10" CVRepeat="1" CVSeed="12345" ObsImportance="N" NumSingleImp="5" UseDecision="N" UsePriors="N" ClassColorBy="PERCENTCORRECT" IntColorBy="AVG" ShowNodeId="Y" ShowValid="Y" Pred="N" Target="ALL" Count="Y" ProfitLoss="NONE" PercentCorrect="N" AVG="Y" RASE="N" CreateSample="DEFAULT" SampleMethod="RANDOM" SampleSize="10000" SampleSeed="12345" ForceRun="N" RunAction="Train" Component="DecisionTree" Criterion="DEFAULT" Dummy="N" Predict="Y" ImportedTreeData="">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="VariableClustering" ID="VarClus" X="734" Y="229" DESCRIPTION="Variable Clustering" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="VarClus">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMEXPL.VARIABLECLUSTERING.SOURCE" HideVariable="Y" MaxClus="." ClusSource="CORR" ClusHierachy="Y" IncludeClassVar="N" TwoStageClus="AUTO" SuppressSampWarn="N" ExportedComp="BESTVARWITHCOMP" MaxEigen="." Proportion="0" PrintOption="SHORT" ForceRun="N" RunAction="Train" Component="VariableClustering" DataNeeded="Y">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+</NODES>
+<CONNECTIONS>
+<CONNECTION FROM="MdlComp2" TO="EMCODE"/>
+<CONNECTION FROM="EMCODE" TO="Meta"/>
+<CONNECTION FROM="EMCODE" TO="EMCODE3"/>
+<CONNECTION FROM="EMCODE" TO="EMCODE2"/>
+<CONNECTION FROM="EMCODE" TO="CNTRL"/>
+<CONNECTION FROM="CNTRL" TO="MdlComp"/>
+<CONNECTION FROM="EMCODE2" TO="MdlComp"/>
+<CONNECTION FROM="EMCODE3" TO="MdlComp"/>
+<CONNECTION FROM="Meta" TO="VarClus"/>
+<CONNECTION FROM="Meta" TO="CNTRL2"/>
+<CONNECTION FROM="CNTRL2" TO="HPReg"/>
+<CONNECTION FROM="CNTRL2" TO="HPReg2"/>
+<CONNECTION FROM="CNTRL2" TO="Tree"/>
+<CONNECTION FROM="CNTRL2" TO="HPNNA"/>
+<CONNECTION FROM="CNTRL2" TO="HPDMForest"/>
+<CONNECTION FROM="VarClus" TO="MdlComp"/>
+<CONNECTION FROM="MdlComp" TO="EMCODE4"/>
+<CONNECTION FROM="HPDMForest" TO="MdlComp"/>
+<CONNECTION FROM="HPNNA" TO="MdlComp"/>
+<CONNECTION FROM="Tree" TO="MdlComp"/>
+<CONNECTION FROM="HPReg2" TO="MdlComp"/>
+<CONNECTION FROM="HPReg" TO="MdlComp"/>
+<CONNECTION FROM="CNTRL3" TO="MdlComp2"/>
+<CONNECTION FROM="CNTRL3" TO="CNTRL"/>
+</CONNECTIONS>
+<NOTES>
+<DATA><![CDATA[
+
+
+]]>
+</DATA>
+</NOTES>
+</Workspace>
+</_ROOT_>
