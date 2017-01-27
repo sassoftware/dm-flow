@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Component PUBLIC "-//SAS//EnterpriseMiner DTD Components 1.3//EN" "Components.dtd">
+
+<Component description="Multivariate Adaptive Regression Spline" 
+           displayName="MARS" 
+           group="APPS" 
+           icon="MARS.gif" 
+           name="Multivariate Adaptive Regression Spline"
+           prefix="MARS" 
+      	   resource="com.sas.analytics.eminer.visuals.PropertyBundle"
+           serverclass="EM6" 
+           type="AF">
+		   
+<!--PropertyDescriptors controller="com.sas.analytics.eminer.components.propertysheetrules.HpgPropertySheetListener"-->
+<PropertyDescriptors>
+    <Property description="properties.common.variables.desc.txt" 
+       displayName="properties.common.variables.txt" 
+       name="VariableSet" 
+       type="String"  ruleClass="com.sas.analytics.eminer.components.variablesrules.HpgVariablesRules">
+	<Control>
+	<Dialog allowTyping="N" class="com.sas.analytics.eminer.visuals.VariablesDialog" showValue="N"/>
+	</Control>
+	</Property>
+
+	<Property type="String" name="Location"  initial="CATALOG"/>
+
+	<Property type="String" name="Catalog" initial="SASHELP.EMEXTN.MARS.SOURCE" />
+	
+	
+    <Property type="boolean" name="MAINEFFECTS"
+      	      displayName="Main Effects Only"
+	      description="Specifies whether to include main effects only. If No is selected, then two-way or higher order interaction between spline basis functions are included." initial="Y" />
+		  
+    <Property type="int" name="MAXORDER"
+       	          displayName="Interaction Orders"
+       	          description="Specifies higher order interaction." initial="2">
+                <Control>
+       	                  <Range min="2" max="5" />
+                </Control>
+    </Property>
+
+    <Property type="boolean" name="IFKEEPEFFECTS"
+      	      displayName="Keep Effects"
+	      description="Specifies whether to include main effects only. If No is selected, then two-way or higher order interaction between spline basis functions are included." initial="N" />
+
+    <Property type="String" name="KeepEffects" displayName="Keep Effects" description="Specifies a list of variables to be included in the final model.">
+      <Control>
+			<Dialog showValue="N" allowTyping="N" class="com.sas.analytics.eminer.visuals.InteractionsEditorDialog" > 
+				<Option name="Key" value="KEEPEFFECTS"/> 
+				<Option name="MainEffect" value="Y"/> 
+				<Option name="MaxTerms" value="1"/> 
+				<Option name="Open" value="EM_MARS_openKeepEffectTable"/> 
+				<Option name="Close" value="EM_MARS_CloseKeepEffectTable"/> 
+				<Option name="IntervalVariable" value="Y"/>	
+				<Option name="IntervalWhereClause" value=" where (ROLE ='INPUT' and USE IN ('D','Y')) or (ROLE='REJECTED' and USE IN ('Y'))"/>	
+				<Option name="ClassWhereClause" value=" where ((ROLE ='INPUT' and USE IN ('D','Y')) or (ROLE='REJECTED' and USE IN ('Y')) ) and LEVEL ne 'INTERVAL'"/>		
+			</Dialog>				
+      </Control>
+    </Property>	   
+    <Property type="boolean" name="IFNOTRANSFORM"
+      	      displayName="Effects Without Transformation"
+	      description="Specifies whether to include only main effects only. If No is selected, then two-way or higher order interaction between spline basis functions are included." initial="N" />
+
+    <Property type="String" name="NoTransform" displayName="Effects Without Transformation" description="Specifies a list of variables to be considered without nonparametric transformation. Variables should appear in the linear form if they are selected.">
+      <Control>
+			<Dialog showValue="N" allowTyping="N" class="com.sas.analytics.eminer.visuals.InteractionsEditorDialog" > 
+				<Option name="Key" value="NOTRANSFORM"/> 
+				<Option name="MainEffect" value="Y"/> 
+				<Option name="MaxTerms" value="1"/> 
+				<Option name="Open" value="EM_MARS_openNoTransformTable"/> 
+				<Option name="Close" value="EM_MARS_openNoTransformTable"/> 
+				<Option name="IntervalVariable" value="Y"/>	
+				<Option name="IntervalWhereClause" value=" where (ROLE ='INPUT' and USE IN ('D','Y')) or (ROLE='REJECTED' and USE IN ('Y'))"/>	
+				<Option name="ClassWhereClause" value=" where ((ROLE ='INPUT' and USE IN ('D','Y')) or (ROLE='REJECTED' and USE IN ('Y')) ) and LEVEL ne 'INTERVAL'"/>		
+			</Dialog>				
+      </Control>
+    </Property>	 
+
+    <Property type="boolean" name="NOMISS"
+      	      displayName="Exclude Missing"
+	      description="Specifies whether to exclude missing from train data." initial="N" />
+       
+
+	<Property type="String" name="MAXBASIS" 
+			  displayName="Maximum Number of Basis" 
+			  description="Uses default the maximum number of basis functions in the final model or specifies in the Maximum Basis Number property. Default is the larger value between 21 and one plus two times the number of non-intercept effects specified in the MODEL statement."
+			  initial="DEFAULT">
+			   <Control>
+			      <ChoiceList>
+				<Choice rawValue="DEFAULT" displayValue="Default" />
+	    	  		<Choice rawValue="USER" displayValue="User Specify" />
+			     </ChoiceList>
+	         	     </Control>        
+	</Property>
+	
+     <Property type="int" name="MAXBASISNUM"
+       	          displayName="Maximum Basis Number"
+       	          description="Specifies the number of maximum number of basis functions that can be used in the final model" initial=".">
+                <Control>
+       	                  <Range min="1"  />
+                </Control>
+     </Property>
+
+     <Property type="int" name="DF"
+       	          displayName="Degree of Freedom"
+       	          description="Specifies the degree of freedom. Larger value of degree of freedom lead to fewer spline knots and thus smoother function estimates." initial="2">
+                <Control>
+       	                  <Range min="2"  />
+                </Control>
+     </Property>
+     <Property type="double" name="ALPHA"
+       	          displayName="Alpha"
+       	          description="Specifies the number of knots considered for each variable. The value must be from 0 to 1." initial="0.05">
+                <Control>
+       	                  <Range min="0" max="1"  />
+                </Control>
+     </Property>
+     <Property type="String" name="PENALTY" 
+			  displayName="Penalty" 
+			  description="Specifies the penalty for increasing number of variables in the multivariate adaptive regression spline model."
+			  initial="NONE">
+			   <Control>
+			      <ChoiceList>
+				<Choice rawValue="NONE" displayValue="No Penalty" />
+	    	  		<Choice rawValue="MODERATE" displayValue="Moderate Penalty" />
+				<Choice rawValue="HEAVY" displayValue="Heavy Penalty" />
+			     </ChoiceList>
+	         	     </Control>        
+	</Property>
+	
+       
+     <Property type="String" name="DISTRIBUTION" 
+			  displayName="Probability Distribution" 
+			  description="Specifies the probability distribution of Generalized Linear Model. Normal is for interval target by default, Binary for classification if character variable."
+			  initial="DEFAULT">
+			   <Control>
+			      <ChoiceList>
+				<Choice rawValue="DEFAULT" displayValue="Default" />
+	    	  		<Choice rawValue="POISSON" displayValue="Poisson" />
+				<Choice rawValue="NEGBIN" displayValue="Negative Binomial" />
+				<Choice rawValue="GAMMA" displayValue="Gamma" />
+	    	  		<Choice rawValue="BINARY" displayValue="Binary" />
+				<Choice rawValue="NORMAL" displayValue="Normal" />
+				<Choice rawValue="IGAUSSIAN" displayValue="Inverse Gaussian" />
+			     </ChoiceList>
+	         	     </Control>        
+	</Property>
+	
+     <Property type="String" name="LINK" 
+			  displayName="Link Function" 
+			  description="Specifies the link function of Generalized Linear Model. The default link function for Normal distribution is Identity, and Logit is for Binary distribution."
+			  initial="DEFAULT">
+			   <Control>
+			      <ChoiceList>
+				<Choice rawValue="DEFAULT" displayValue="Default" />
+	    	  		<Choice rawValue="LOG" displayValue="Log" />
+				<Choice rawValue="RECIP" displayValue="Reciprocal" />
+				<Choice rawValue="IDENTITY" displayValue="Identity" />
+	    	  		<Choice rawValue="LOGIT" displayValue="Logit" />
+				<Choice rawValue="PROBIT" displayValue="Probit" />
+				<Choice rawValue="POWERMINUS2" displayValue="Power with exponent -2" />
+				<Choice rawValue="CLL" displayValue="Complementary log-log" />
+
+			     </ChoiceList>
+	         	     </Control>        
+	</Property>
+	<!--  for the Optimization option subgroup -->
+	<Property name="TECH" type="String" displayName="Technique" 	description="Specifies the optimization technique to obtain maximum likelihood estimates for non-normal distributions." initial="NEWRAP">
+	<Control><ChoiceList>
+  		<Choice rawValue="CONGRA" displayValue="Conjugate-gradient optimization"/>
+  		<Choice rawValue="DBLDOG" displayValue="Double-dogleg optimization"/>
+  		<Choice rawValue="NEWRAP" displayValue="Newton-Raphson optimization"/>
+  		<Choice rawValue="NMSIMP" displayValue="Nelder-Mead simplex optimization"/>
+  		<Choice rawValue="NRRIDG" displayValue="Newton-Raphson optimization with ridging"/>
+  		<Choice rawValue="QUANEW" displayValue="quasi-Newton optimization"/>
+  		<Choice rawValue="TRUREG" displayValue="Trust-region optimization"/>
+ 		<Choice rawValue="NONE" displayValue="No optimization"/>
+  	</ChoiceList></Control>
+	</Property>
+	
+		<Property name="HESS" type="String" displayName="Hessian Matrix" 	description="Specifies the Hessian matrix type used in the optimization of likelihood functions, if the Newton-Raphson technique is used. EXPECTED requests that the Hessian matrix in optimization be computed as the negative of the expected information matrix; OBSERVED requests that the Hessian matrix in optimization be computed as the negative of the observed information matrix." initial="EXPECTED">
+	<Control><ChoiceList>
+  		<Choice rawValue="EXPECTED" displayValue="Expected"/>
+  		<Choice rawValue="OBSERVED" displayValue="Observed"/>
+  	</ChoiceList></Control>
+	</Property>
+	
+	<Property name="MAXITER" type="int" displayName="Maximum Number of Iterations" description="Specifies the maximum number of iterations in the optimization process. The default values are depending on the optimization technique. The default is 50 for Trust-region optimization, Newton-Raphson optimization with ridging and Newton-Raphson optimization; the default is 200 for quasi-Newton optimization and Double-dogleg optimization; the default is 400 for Conjugate-gradient optimization; the default is 1000 for Nelder-Mead simplex optimization." initial=".">
+		<Control> <Range min="1"/> </Control>
+</Property>
+	<Property name="MAXFUNC" type="int" displayName="Maximum Number of Function Calls" description="Specifies the maximum number of function calls in the optimization process. The default values are depending on the optimization technique. The default is 125 for Trust-region optimization, Newton-Raphson optimization with ridging and Newton-Raphson optimization; the default is 500 for quasi-Newton optimization and Double-dogleg optimization; the default is 1000 for Conjugate-gradient optimization; the default is 3000 for Nelder-Mead simplex optimization." initial=".">
+		<Control> <Range min="1"/> </Control>
+	</Property>
+	<Property name="MAXTIME" type="int" displayName="Maximum CPU Time" description="Specifies an upper limit of CPU time for the optimization process. By default, CPU time is not limited." initial=".">
+		<Control> <Range min="1"/> </Control>
+	</Property>
+	<Property name="MINITER" type="int" displayName="Minimum Number of Iterations" description="Specifies the minimum number of iterations." initial="0">
+		<Control> <Range min="1"/> </Control>
+	</Property>
+	<Property name="NORMALIZE" type="boolean" displayName="NORMALIZE.txt" description="NORMALIZE.desc.txt" initial="Y"/>
+
+<!--  for the Convergence option subgroup -->
+	<Property name="ABSCONV" type="double" displayName="Absolute Function Convergence Criterion" description="Specifies an absolute function convergence criterion. The default value is the negative square root of the largest double-precision value, which serves only as a protection against overflows." initial="."/>
+	<Property name="ABSFCONV" type="double" displayName="Absolute Function Difference Convergence Criterion" description="Specifies an absolute function difference convergence criterion." initial="0">
+<Control> <Range min="0"/> </Control>
+	</Property>
+	<Property name="ABSGCONV" type="double" displayName="Absolute Gradient Convergence Criterion" description="Specifies an absolute gradient difference convergence criterion." initial="0.00001">
+		<Control> <Range min="0"/> </Control>
+	</Property>
+	<Property name="FCONV" type="double" displayName="Relative Function Convergence Criterion" description="Specifies an relative function convergence criterion." initial=".">
+		<Control> <Range min="0"/> </Control>
+	</Property>
+	<Property name="GCONV" type="double" displayName="Relative Gradient Convergence Criterion" description="Specifies an relative gradient convergence criterion." initial="0.00000001">
+		<Control> <Range min="0"/> </Control>
+	</Property>
+
+	
+		<Property name="SELECTION" type="String" displayName="Selection Method" 	description="Specifies the method of selection process. The default algorithm of MARS contains two stages: forward selection and backward selection. During the forward selection process, bases are created from interactions between existing parent bases and nonparametric transformation of continuous or classification variables as candidate effects. After the model grows to a certain size, the backward selection process begins by deleting selected based. The deletion continues until the null model is reached, and then the overall best model is chosen based on some goodness-of-fit criterion. The Forward Only selection skips the backward selection step after forward selection is finished." initial="DEFAULT">
+	<Control><ChoiceList>
+  		<Choice rawValue="DEFAULT" displayValue="Default" />
+  		<Choice rawValue="FORWARDONLY" displayValue="Forward Only Selection"/>
+  	</ChoiceList></Control>
+	</Property>
+
+    <Property type="boolean" name="FAST"
+      	      displayName="Use Fast Algorithm"
+	      description="The fast algorithm improves the speed of the forward selection by tuning several parameters. " initial="N" />	
+	<!--  for the Fast Selection option subgroup -->
+
+	<Property name="BETA" type="int" displayName="Beta" description="Specifies the 'aging' factor in the priority queue of candidate parent bases. Larger values of beta result in low-improvement parents rising fast into top list of candidates." initial="1">
+		<Control> <Range min="1"/> </Control>
+	</Property>
+	
+	<Property name="H" type="int" displayName="H" description="Specifies the parameter that controls how ften the improvement is recomputed for a parent basis over all candidate variables. Larger values of h cause fewer computations of improvement." initial="1">
+		<Control> <Range min="1"/> </Control>
+	</Property>
+	
+     <Property type="boolean" name="CROSSVALID"
+      	      displayName="Cross Validation"
+	      description="Cross Validation" initial="N" />
+
+	<Property type="String" name="NFOLD" 
+			  displayName="Number of Folds" 
+			  description="Specifies the number of cross validation fold."
+			  initial="2">
+			   <Control>
+			      <ChoiceList>
+				<Choice rawValue="2"/>
+				<Choice rawValue="3"/>
+				<Choice rawValue="4"/>				
+				<Choice rawValue="5"/>
+				<Choice rawValue="6"/>
+				<Choice rawValue="7"/>
+				<Choice rawValue="8"/>
+				<Choice rawValue="9"/>
+				<Choice rawValue="10"/>
+			     </ChoiceList>
+	         	     </Control>        
+	</Property>
+	<Property type="String" name="SEED" 
+			  displayName="Seed" 
+			  description="Specifies the seed to start the pseudorandom number generator for random cross validation. Default seed is generated from the time of day, which is read from the computer's clock."
+			  initial="DEFAULT">
+			   <Control>
+			      <ChoiceList>
+				<Choice rawValue="DEFAULT" displayValue="Default" />
+	    	  		<Choice rawValue="USER" displayValue="User Specify" />
+			     </ChoiceList>
+	         	     </Control>        
+	</Property>
+	
+     <Property type="int" name="SEEDNUM"
+       	          displayName="Random Seed"
+       	          description="Specifies the seed to start the pseudorandom number generator for randon cross validation. If 0 is specified, the seed is generated from the time of day, which is read from the computer's clock." initial="12345">
+                <Control>
+       	                  <Range min="0"  />
+                </Control>
+     </Property>
+     <Property type="int" name="THREADS"
+       	          displayName="Computation Threads"
+       	          description="Specifies the number of threads for analytic computations. If not specified, the number of threads is determined based on the data size and then number of CPUs on the host. Or if the specified number of threads is more than the number of actual CPUs, the node by default sets the value to the number of actual CPUs" initial=".">
+                <Control>
+       	                  <Range min="1"  />
+                </Control>
+     </Property>
+
+	<Property type="String" name="EXCLUDEDVARIABLE" displayName="Excluded Rejected Variable" description="Specifies what action should be taken for variables excluded from the final model. This option is only in effect when using a variable selection method. When set to None, the role of these variables remain unchanged. When set to Hide, these variables are dropped from the metadata exported by the node. When set to Reject, the role of these variables are set to REJECTED." initial="REJECT">
+		<Control>
+		<ChoiceList>
+		<Choice rawValue="NONE" displayValue="None" />
+		<Choice rawValue="HIDE" displayValue="Hide" />
+		<Choice rawValue="REJECT" displayValue="Reject" />
+		</ChoiceList>
+		</Control>
+	</Property>
+	
+     <Property type="boolean" name="OUTPUT"
+      	      displayName="Output Design Matrix"
+	      description="Specifies whether to create a data set that contains the design matrix of constructed basis functions." initial="N" />
+	
+     <Property type="String" name="OUTDESIGN" displayName="Selected Model" description="Specifies the selected model to produce the design matrix." initial="BACKWARD">
+		<Control>
+		<ChoiceList>
+		<Choice rawValue="BACKWARD" displayValue="After Backward Selection" />
+		<Choice rawValue="FORWARD" displayValue="After Forward Selection" />
+		<Choice rawValue="STARTMODEL" displayValue="Initial Model" />
+		</ChoiceList>
+		</Control>
+	</Property>
+
+  	</PropertyDescriptors> 
+
+	<Views>
+	<View name="Train">
+			<PropertyRef nameref="VariableSet"/>
+	      			
+	<Group name="MarsPropertiesGroup" displayName="Regression Splines">
+	    <PropertyRef nameref="MAINEFFECTS"/> 
+	    <PropertyRef nameref="MAXORDER"/>
+	     <!--PropertyRef nameref="IFKEEPEFFECTS"/--> 
+		<PropertyRef nameref="KeepEffects" /> 
+	     <!--PropertyRef nameref="IFNOTRANSFORM"/--> 
+		<PropertyRef nameref="NoTransform" /> 
+		<PropertyRef nameref="NOMISS" /> 
+		<SubGroup name="SplineOptions"
+			displayName="Spline Options"
+			description="Specifies the options for spline function">
+
+	           <PropertyRef nameref="MAXBASIS"/>
+	           <PropertyRef nameref="MAXBASISNUM"/> 
+	           <PropertyRef nameref="DF"/> 
+	           <PropertyRef nameref="ALPHA"/> 
+
+		</SubGroup>
+		<PropertyRef nameref="PENALTY" /> 
+
+
+	</Group>  
+ 
+	<Group name="GLMPropertiesGroup" displayName="Modeling">
+	     	<PropertyRef nameref="DISTRIBUTION"/> 
+	     	<PropertyRef nameref="LINK"/> 
+			<PropertyRef nameref="SELECTION"/> 
+			<PropertyRef nameref="FAST" /> 
+			<SubGroup name="FastOptions" 	displayName="Fast Algorithm Options" 	description="Specifies the fast algorithm options.">
+ 			    <PropertyRef nameref="BETA"/>
+ 			    <PropertyRef nameref="H"/>
+		    </SubGroup>
+		<SubGroup name="OptimizeOptions" 			displayName="Optimization Options" 		description="Specifies optimization options.">
+ 			<PropertyRef nameref="TECH"/>
+ 			<PropertyRef nameref="MAXITER"/>
+ 			<PropertyRef nameref="MAXFUNC"/>
+ 			<PropertyRef nameref="MAXTIME"/>
+ 			<PropertyRef nameref="MINITER"/>
+ 			<PropertyRef nameref="HESS"/>
+		</SubGroup>
+		<SubGroup name="ConvergeOptions" 	displayName="Convergence Options" 	description="Specifies convergence options.">
+ 			<PropertyRef nameref="ABSCONV"/>
+ 			<PropertyRef nameref="ABSFCONV"/>
+ 			<PropertyRef nameref="ABSGCONV"/>
+ 			<PropertyRef nameref="FCONV"/>
+ 			<PropertyRef nameref="GCONV"/>
+		</SubGroup> 
+	</Group>  
+ 
+	<Group name="CrossValid" displayName="Cross Validation">
+	     <PropertyRef nameref="CROSSVALID"/>
+	     <PropertyRef nameref="NFOLD"/> 
+	     <PropertyRef nameref="SEEDNUM"/> 
+ 
+	</Group>  
+
+	<Group name="Output" displayName="Output Data Set">
+	<PropertyRef nameref="OUTPUT"/>
+	<PropertyRef nameref="OUTDESIGN" />
+	</Group> 
+	</View>
+	<View name="Score">
+	<PropertyRef nameref="EXCLUDEDVARIABLE" />
+	</View>
+ 
+	</Views>
+</Component>
