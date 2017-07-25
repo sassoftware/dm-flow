@@ -23,6 +23,6 @@ predictive model and to compare this model with a similar model that does not ha
 ###### Files:
 ClusterNodePredict.xml, ClusterNodePredict.pdf
 
-***
+*** 
 
 License: <http://www.apache.org/licenses/LICENSE-2.0>
