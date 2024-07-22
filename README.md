@@ -1,4 +1,7 @@
 # SAS Enterprise Miner Data Mining Examples
+
+**Archived project: This project is no longer under active development and was archived on 2024-07-22.**
+
 ## Overview
 This repository contains example diagrams and materials for using SAS Enterprise Miner to perform data mining.
 
